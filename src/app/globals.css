@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 @layer base {
   :root {
@@ -13,80 +12,79 @@
   }
 }
 
-@layer components {
-  /* Button Variants */
-  .btn {
-    @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-
-  .btn-primary {
-    @apply btn bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
-  }
-
-  .btn-secondary {
-    @apply btn bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500;
-  }
-
-  .btn-danger {
-    @apply btn bg-red-500 text-white hover:bg-red-600 focus:ring-red-500;
-  }
-
-  .btn-sm {
-    @apply px-3 py-1.5 text-sm;
-  }
-
-  .btn-md {
-    @apply px-4 py-2 text-base;
-  }
-
-  .btn-lg {
-    @apply px-6 py-3 text-lg;
-  }
-
-  /* Card */
-  .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100;
-  }
-
-  /* Input */
-  .input {
-    @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors;
-  }
-
-  /* Badge */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  /* Status badges */
-  .badge-pending {
-    @apply badge bg-yellow-100 text-yellow-800;
-  }
-  
-  .badge-confirmed {
-    @apply badge bg-blue-100 text-blue-800;
-  }
-  
-  .badge-assigned {
-    @apply badge bg-purple-100 text-purple-800;
-  }
-  
-  .badge-picked_up {
-    @apply badge bg-orange-100 text-orange-800;
-  }
-  
-  .badge-on_the_way {
-    @apply badge bg-cyan-100 text-cyan-800;
-  }
-  
-  .badge-delivered {
-    @apply badge bg-green-100 text-green-800;
-  }
-  
-  .badge-cancelled {
-    @apply badge bg-red-100 text-red-800;
-  }
+/* Button Variants */
+@utility btn {
+  @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
 }
+
+@utility btn-primary {
+  @apply btn bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
+}
+
+@utility btn-secondary {
+  @apply btn bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500;
+}
+
+@utility btn-danger {
+  @apply btn bg-red-500 text-white hover:bg-red-600 focus:ring-red-500;
+}
+
+@utility btn-sm {
+  @apply px-3 py-1.5 text-sm;
+}
+
+@utility btn-md {
+  @apply px-4 py-2 text-base;
+}
+
+@utility btn-lg {
+  @apply px-6 py-3 text-lg;
+}
+
+/* Card */
+@utility card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-100;
+}
+
+/* Input */
+@utility input {
+  @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors;
+}
+
+/* Badge */
+@utility badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+/* Status badges */
+@utility badge-pending {
+  @apply badge bg-yellow-100 text-yellow-800;
+}
+
+@utility badge-confirmed {
+  @apply badge bg-blue-100 text-blue-800;
+}
+
+@utility badge-assigned {
+  @apply badge bg-purple-100 text-purple-800;
+}
+
+@utility badge-picked_up {
+  @apply badge bg-orange-100 text-orange-800;
+}
+
+@utility badge-on_the_way {
+  @apply badge bg-cyan-100 text-cyan-800;
+}
+
+@utility badge-delivered {
+  @apply badge bg-green-100 text-green-800;
+}
+
+@utility badge-cancelled {
+  @apply badge bg-red-100 text-red-800;
+}
+
 
 @layer utilities {
   .text-balance {
