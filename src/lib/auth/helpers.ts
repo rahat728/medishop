@@ -26,11 +26,11 @@ export async function getCurrentUser() {
  */
 export async function requireAuth() {
   const session = await getSession();
-  
+
   if (!session?.user) {
     redirect('/login');
   }
-  
+
   return session.user;
 }
 
@@ -39,13 +39,13 @@ export async function requireAuth() {
  */
 export async function requireRole(allowedRoles: string | string[]) {
   const user = await requireAuth();
-  
+
   const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-  
+
   if (!roles.includes(user.role)) {
     redirect('/unauthorized');
   }
-  
+
   return user;
 }
 
@@ -70,18 +70,4 @@ export async function requireCustomer() {
   return requireRole('customer');
 }
 
-// =============================================================================
-// Role-Based Redirect Paths
-// =============================================================================
-
-export function getRedirectPath(role: string): string {
-  switch (role) {
-    case 'admin':
-      return '/dashboard';
-    case 'delivery':
-      return '/my-orders';
-    case 'customer':
-    default:
-      return '/shop';
-  }
-}
+export { getRedirectPath } from './utils';

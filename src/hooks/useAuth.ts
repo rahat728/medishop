@@ -4,7 +4,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
-import { getRedirectPath } from '@/lib/auth';
+import { getRedirectPath } from '@/lib/auth/utils';
 
 export function useAuth() {
   const { data: session, status, update } = useSession();
@@ -30,11 +30,11 @@ export function useAuth() {
         }
 
         toast.success('Welcome back!');
-        
+
         // Get session to determine redirect
         const response = await fetch('/api/auth/session');
         const sessionData = await response.json();
-        
+
         if (sessionData?.user?.role) {
           const redirectPath = getRedirectPath(sessionData.user.role);
           router.push(redirectPath);

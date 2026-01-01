@@ -17,7 +17,7 @@ export interface ICart extends Document {
   items: ICartItem[];
   createdAt: Date;
   updatedAt: Date;
-  
+
   // Virtuals
   itemCount: number;
 }
@@ -72,7 +72,6 @@ const CartSchema = new Schema<ICart>(
 // Indexes
 // =============================================================================
 
-CartSchema.index({ user: 1 });
 
 // =============================================================================
 // Virtuals

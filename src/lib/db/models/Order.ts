@@ -37,24 +37,24 @@ export interface IOrder extends Document {
   orderNumber: string;
   customer: mongoose.Types.ObjectId | IUser;
   items: IOrderItem[];
-  
+
   // Pricing
   subtotal: number;
   deliveryFee: number;
   tax: number;
   discount: number;
   totalAmount: number;
-  
+
   // Status
   status: OrderStatus;
   statusHistory: IStatusHistory[];
-  
+
   // Payment
   paymentStatus: PaymentStatus;
   paymentMethod: 'stripe' | 'cod'; // COD for future
   paymentIntentId?: string;
   paidAt?: Date;
-  
+
   // Delivery
   deliveryMan?: mongoose.Types.ObjectId | IUser;
   deliveryAddress: IAddress;
@@ -66,13 +66,13 @@ export interface IOrder extends Document {
   estimatedDelivery?: Date;
   actualDelivery?: Date;
   deliveryNotes?: string;
-  
+
   // Cancellation/Refund
   cancelledAt?: Date;
   cancellationReason?: string;
   refundedAt?: Date;
   refundAmount?: number;
-  
+
   // Metadata
   notes?: string;
   createdAt: Date;
@@ -181,7 +181,7 @@ const OrderSchema = new Schema<IOrder>(
         message: 'Order must have at least one item',
       },
     },
-    
+
     // Pricing
     subtotal: {
       type: Number,
@@ -208,7 +208,7 @@ const OrderSchema = new Schema<IOrder>(
       required: true,
       min: 0,
     },
-    
+
     // Status
     status: {
       type: String,
@@ -216,7 +216,7 @@ const OrderSchema = new Schema<IOrder>(
       default: 'pending',
     },
     statusHistory: [StatusHistorySchema],
-    
+
     // Payment
     paymentStatus: {
       type: String,
@@ -230,7 +230,7 @@ const OrderSchema = new Schema<IOrder>(
     },
     paymentIntentId: String,
     paidAt: Date,
-    
+
     // Delivery
     deliveryMan: {
       type: Schema.Types.ObjectId,
@@ -248,13 +248,13 @@ const OrderSchema = new Schema<IOrder>(
     estimatedDelivery: Date,
     actualDelivery: Date,
     deliveryNotes: String,
-    
+
     // Cancellation
     cancelledAt: Date,
     cancellationReason: String,
     refundedAt: Date,
     refundAmount: Number,
-    
+
     notes: String,
   },
   {
@@ -266,7 +266,6 @@ const OrderSchema = new Schema<IOrder>(
 // Indexes
 // =============================================================================
 
-OrderSchema.index({ orderNumber: 1 });
 OrderSchema.index({ customer: 1, createdAt: -1 });
 OrderSchema.index({ deliveryMan: 1, status: 1 });
 OrderSchema.index({ status: 1, createdAt: -1 });
@@ -277,13 +276,13 @@ OrderSchema.index({ createdAt: -1 });
 // Pre-save Middleware - Generate Order Number
 // =============================================================================
 
-OrderSchema.pre('save', async function (next) {
+OrderSchema.pre('save', async function () {
   if (this.isNew && !this.orderNumber) {
     const date = new Date();
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     this.orderNumber = `ORD-${dateStr}-${random}`;
-    
+
     // Add initial status to history
     this.statusHistory = [{
       status: 'pending',
@@ -291,7 +290,6 @@ OrderSchema.pre('save', async function (next) {
       note: 'Order created',
     }];
   }
-  next();
 });
 
 // =============================================================================
@@ -314,7 +312,7 @@ OrderSchema.methods.updateStatus = async function (
     cancelled: [],
   };
 
-  if (!validTransitions[this.status]?.includes(newStatus)) {
+  if (!validTransitions[this.status as OrderStatus]?.includes(newStatus)) {
     throw new Error(`Invalid status transition from ${this.status} to ${newStatus}`);
   }
 
