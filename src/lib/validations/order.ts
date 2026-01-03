@@ -136,3 +136,25 @@ export const updateOrderStatusSchema = z.object({
 });
 
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+
+// =============================================================================
+// Create Order Schema
+// =============================================================================
+
+export const createOrderSchema = z.object({
+    items: z.array(z.object({
+        medicine: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid medicine ID'),
+        quantity: z.number().int().min(1, 'Quantity must be at least 1'),
+    })).min(1, 'Order must have at least one item'),
+    shippingAddress: z.object({
+        street: z.string().min(5, 'Street address is required'),
+        city: z.string().min(2, 'City is required'),
+        state: z.string().min(2, 'State is required'),
+        zipCode: z.string().min(5, 'ZIP code is required'),
+    }),
+    paymentMethod: z.enum(['stripe', 'cod']),
+    notes: z.string().max(1000).optional(),
+});
+
+export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db/mongoose';
-import { Order } from '@/lib/db/models';
-import { withAdmin } from '@/lib/auth';
+import { Order, Medicine } from '@/lib/db/models';
+import { withAdmin, withAuth } from '@/lib/auth';
 import {
     successResponse,
+    errorResponse,
     serverErrorResponse,
     validationErrorResponse,
 } from '@/lib/api-response';
-import { orderQuerySchema } from '@/lib/validations/order';
+import { orderQuerySchema, createOrderSchema } from '@/lib/validations/order';
 
 // =============================================================================
 // GET /api/orders - List all orders (admin only)
@@ -38,25 +39,9 @@ export const GET = withAdmin(async (request, { user }) => {
 
         if (!queryResult.success) {
             let errorMessages: string[] = ['Invalid parameters'];
-            // Handle unexpected Zod Error format (potentially due to version mismatch)
             if (queryResult.error && queryResult.error.issues) {
                 errorMessages = queryResult.error.issues.map((e: any) => e.message);
-            } else if (queryResult.error && Array.isArray((queryResult.error as any).errors)) {
-                errorMessages = (queryResult.error as any).errors.map((e: any) => e.message);
-            } else if (queryResult.error && typeof queryResult.error.message === 'string') {
-                // Zod 4? or some other version might stringify the issues in message
-                try {
-                    const parsed = JSON.parse(queryResult.error.message);
-                    if (Array.isArray(parsed)) {
-                        errorMessages = parsed.map((e: any) => e.message);
-                    } else {
-                        errorMessages = [queryResult.error.message];
-                    }
-                } catch {
-                    errorMessages = [queryResult.error.message];
-                }
             }
-
             return validationErrorResponse(errorMessages);
         }
 
@@ -83,30 +68,15 @@ export const GET = withAdmin(async (request, { user }) => {
             ];
         }
 
-        if (status) {
-            query.status = status;
-        }
-
-        if (paymentStatus) {
-            query.paymentStatus = paymentStatus;
-        }
-
-        if (customerId) {
-            query.customer = customerId;
-        }
-
-        if (deliveryManId) {
-            query.deliveryMan = deliveryManId;
-        }
+        if (status) query.status = status;
+        if (paymentStatus) query.paymentStatus = paymentStatus;
+        if (customerId) query.customer = customerId;
+        if (deliveryManId) query.deliveryMan = deliveryManId;
 
         if (startDate || endDate) {
             query.createdAt = {};
-            if (startDate) {
-                query.createdAt.$gte = new Date(startDate);
-            }
-            if (endDate) {
-                query.createdAt.$lte = new Date(endDate);
-            }
+            if (startDate) query.createdAt.$gte = new Date(startDate);
+            if (endDate) query.createdAt.$lte = new Date(endDate);
         }
 
         // Get total count
@@ -160,6 +130,90 @@ export const GET = withAdmin(async (request, { user }) => {
                 deliveredOrders: 0,
             },
         });
+    } catch (error) {
+        return serverErrorResponse(error);
+    }
+});
+
+// =============================================================================
+// POST /api/orders - Create new order (authenticated customer)
+// =============================================================================
+
+export const POST = withAuth(async (request, { user }) => {
+    try {
+        await connectDB();
+
+        const body = await request.json();
+
+        // Validate request body
+        const validation = createOrderSchema.safeParse(body);
+        if (!validation.success) {
+            return validationErrorResponse(
+                validation.error.errors.map((e) => e.message)
+            );
+        }
+
+        const { items, shippingAddress, paymentMethod, notes } = validation.data;
+
+        // Verify stock and calculate total
+        let subtotal = 0;
+        const orderItems = [];
+
+        for (const item of items) {
+            const medicine = await Medicine.findById(item.medicine);
+
+            if (!medicine) {
+                return errorResponse(`Medicine not found: ${item.medicine}`, 404);
+            }
+
+            if (!medicine.isActive) {
+                return errorResponse(`${medicine.name} is no longer available`, 400);
+            }
+
+            if (medicine.stock < item.quantity) {
+                return errorResponse(
+                    `Insufficient stock for ${medicine.name}. Only ${medicine.stock} available.`,
+                    400
+                );
+            }
+
+            const itemTotal = medicine.price * item.quantity;
+            subtotal += itemTotal;
+
+            orderItems.push({
+                medicine: medicine._id,
+                name: medicine.name,
+                price: medicine.price,
+                quantity: item.quantity,
+                subtotal: itemTotal,
+            });
+
+            // Reserve stock (decrement)
+            medicine.stock -= item.quantity;
+            await medicine.save();
+        }
+
+        // Calculate totals
+        const deliveryFee = subtotal > 50 ? 0 : 5.99;
+        const tax = subtotal * 0.08;
+        const totalAmount = subtotal + deliveryFee + tax;
+
+        // Create order
+        const order = await Order.create({
+            customer: user.id,
+            items: orderItems,
+            subtotal,
+            deliveryFee,
+            tax,
+            totalAmount,
+            deliveryAddress: shippingAddress,
+            paymentMethod,
+            paymentStatus: 'pending',
+            status: 'pending',
+            notes,
+        });
+
+        return successResponse(order, 'Order created successfully', 201);
     } catch (error) {
         return serverErrorResponse(error);
     }
