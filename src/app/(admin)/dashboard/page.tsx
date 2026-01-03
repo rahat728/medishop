@@ -1,141 +1,261 @@
-import { 
-  Package, 
-  ShoppingBag, 
-  Users, 
+import { Suspense } from 'react';
+import Link from 'next/link';
+import {
+  ShoppingBag,
   DollarSign,
+  Package,
+  Truck,
   TrendingUp,
-  Clock
+  ArrowRight,
+  Boxes,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import connectDB from '@/lib/db/mongoose';
+import { Medicine, Order, User } from '@/lib/db/models';
+import { AdminHeader } from '@/components/layout';
+import {
+  StatsCard,
+  StatsGrid,
+  SimpleBarChart,
+  DonutChart,
+  RecentOrdersWidget,
+  LowStockWidget,
+  ActivityFeedWidget,
+} from '@/components/admin';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '@/components/ui';
 
-// Placeholder stats - will be replaced with real data
-const stats = [
-  {
-    title: 'Total Orders',
-    value: '156',
-    change: '+12%',
-    icon: ShoppingBag,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
-  },
-  {
-    title: 'Revenue',
-    value: '$4,280',
-    change: '+8%',
-    icon: DollarSign,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
-  },
-  {
-    title: 'Products',
-    value: '48',
-    change: '+3',
-    icon: Package,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
-  },
-  {
-    title: 'Delivery Men',
-    value: '8',
-    change: 'Active',
-    icon: Users,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
-  },
-];
+// =============================================================================
+// Data Fetching
+// =============================================================================
 
-const recentOrders = [
-  { id: 'ORD-001', customer: 'John Doe', status: 'delivered', amount: '$45.00' },
-  { id: 'ORD-002', customer: 'Jane Smith', status: 'on_the_way', amount: '$32.50' },
-  { id: 'ORD-003', customer: 'Bob Wilson', status: 'confirmed', amount: '$78.00' },
-  { id: 'ORD-004', customer: 'Alice Brown', status: 'pending', amount: '$23.00' },
-];
+async function getDashboardData() {
+  try {
+    await connectDB();
 
-const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-blue-100 text-blue-800',
-  on_the_way: 'bg-cyan-100 text-cyan-800',
-  delivered: 'bg-green-100 text-green-800',
-};
+    // Get counts
+    const [
+      totalOrders,
+      totalMedicines,
+      totalDeliveryMen,
+      outOfStockCount,
+      lowStockMedicines,
+    ] = await Promise.all([
+      Order.countDocuments(),
+      Medicine.countDocuments({ isActive: true }),
+      User.countDocuments({ role: 'delivery', isActive: true }),
+      Medicine.countDocuments({ isActive: true, stock: 0 }),
+      Medicine.find({
+        isActive: true,
+        $expr: { $lte: ['$stock', '$lowStockThreshold'] },
+      })
+        .select('name stock lowStockThreshold image manufacturer')
+        .sort({ stock: 1 })
+        .limit(5)
+        .lean(),
+    ]);
 
-export default function AdminDashboardPage() {
+    // Get today's stats
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [todayOrders, revenueResult] = await Promise.all([
+      Order.countDocuments({ createdAt: { $gte: today } }),
+      Order.aggregate([
+        { $match: { paymentStatus: 'paid' } },
+        { $group: { _id: null, total: { $sum: '$totalAmount' } } },
+      ]),
+    ]);
+
+    const totalRevenue = revenueResult[0]?.total || 0;
+
+    // Get recent orders
+    const recentOrders = await Order.find()
+      .populate('customer', 'name')
+      .select('orderNumber totalAmount status createdAt')
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+
+    // Get orders by status for donut chart
+    const ordersByStatus = await Order.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return {
+      stats: {
+        totalOrders,
+        todayOrders,
+        totalRevenue,
+        totalMedicines,
+        totalDeliveryMen,
+        outOfStockCount,
+      },
+      recentOrders: JSON.parse(JSON.stringify(recentOrders)),
+      lowStockMedicines: JSON.parse(JSON.stringify(lowStockMedicines)),
+      ordersByStatus,
+    };
+  } catch (error) {
+    console.error('Dashboard data error:', error);
+    return {
+      stats: {
+        totalOrders: 0,
+        todayOrders: 0,
+        totalRevenue: 0,
+        totalMedicines: 0,
+        totalDeliveryMen: 0,
+        outOfStockCount: 0,
+      },
+      recentOrders: [],
+      lowStockMedicines: [],
+      ordersByStatus: [],
+    };
+  }
+}
+
+// =============================================================================
+// Page Component
+// =============================================================================
+
+export default async function AdminDashboardPage() {
+  const { stats, recentOrders, lowStockMedicines, ordersByStatus } = await getDashboardData();
+
+  // Format orders for widget
+  const formattedOrders = recentOrders.map((order: any) => ({
+    _id: order._id.toString(),
+    orderNumber: order.orderNumber,
+    customer: { name: order.customer?.name || 'Unknown' },
+    totalAmount: order.totalAmount,
+    status: order.status,
+    createdAt: order.createdAt,
+  }));
+
+  // Format low stock for widget
+  const formattedLowStock = lowStockMedicines.map((med: any) => ({
+    _id: med._id.toString(),
+    name: med.name,
+    stock: med.stock,
+    lowStockThreshold: med.lowStockThreshold,
+    image: med.image,
+  }));
+
+  // Prepare donut chart data
+  const statusColors: Record<string, string> = {
+    delivered: '#22c55e',
+    on_the_way: '#06b6d4',
+    confirmed: '#3b82f6',
+    pending: '#eab308',
+    cancelled: '#ef4444',
+  };
+
+  const donutData = ordersByStatus.map((item: any) => ({
+    label: item._id.charAt(0).toUpperCase() + item._id.slice(1).replace('_', ' '),
+    value: item.count,
+    color: statusColors[item._id] || '#9ca3af',
+  }));
+
+  // Mock weekly data (in real app, fetch from DB)
+  const weeklyOrders = [
+    { label: 'Mon', value: 12 },
+    { label: 'Tue', value: 18 },
+    { label: 'Wed', value: 15 },
+    { label: 'Thu', value: 22 },
+    { label: 'Fri', value: 28 },
+    { label: 'Sat', value: 35 },
+    { label: 'Sun', value: 20 },
+  ];
+
+  // Mock activities
+  const activities = [
+    { id: '1', type: 'order_placed' as const, message: 'New order received', time: '5 min ago' },
+    { id: '2', type: 'order_delivered' as const, message: 'Order delivered', time: '1 hour ago' },
+    { id: '3', type: 'low_stock' as const, message: 'Low stock alert triggered', time: '2 hours ago' },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-1">Welcome back! Here's what's happening today.</p>
-      </div>
+      <AdminHeader
+        title="Dashboard"
+        subtitle="Welcome back! Here's what's happening with your store today."
+      />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                    <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" />
-                      {stat.change}
-                    </p>
-                  </div>
-                  <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                    <Icon className={`w-6 h-6 ${stat.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      <StatsGrid columns={4}>
+        <StatsCard
+          title="Total Orders"
+          value={stats.totalOrders}
+          change={stats.todayOrders}
+          changeLabel="today"
+          icon={<ShoppingBag className="w-6 h-6 text-blue-600" />}
+          iconBgColor="bg-blue-100"
+        />
+        <StatsCard
+          title="Revenue"
+          value={`$${stats.totalRevenue.toLocaleString()}`}
+          icon={<DollarSign className="w-6 h-6 text-green-600" />}
+          iconBgColor="bg-green-100"
+        />
+        <StatsCard
+          title="Products"
+          value={stats.totalMedicines}
+          icon={<Package className="w-6 h-6 text-purple-600" />}
+          iconBgColor="bg-purple-100"
+        />
+        <Link href="/stock" className="block">
+          <StatsCard
+            title="Stock Alerts"
+            value={stats.outOfStockCount + formattedLowStock.length}
+            icon={<Boxes className={`w-6 h-6 ${stats.outOfStockCount > 0 ? 'text-red-600' : 'text-yellow-600'}`} />}
+            iconBgColor={stats.outOfStockCount > 0 ? 'bg-red-100' : 'bg-yellow-100'}
+          />
+        </Link>
+      </StatsGrid>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Weekly Orders Chart */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-gray-400" />
+              Weekly Orders
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SimpleBarChart data={weeklyOrders} height={220} />
+          </CardContent>
+        </Card>
+
+        {/* Orders by Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Orders by Status</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            {donutData.length > 0 ? (
+              <DonutChart
+                data={donutData}
+                size={180}
+                centerValue={stats.totalOrders.toString()}
+                centerLabel="Total"
+              />
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No order data yet
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Recent Orders */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            Recent Orders
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Order ID</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Customer</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Status</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm font-medium text-gray-900">{order.id}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{order.customer}</td>
-                    <td className="py-3 px-4">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${statusColors[order.status]}`}>
-                        {order.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-900 text-right">{order.amount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Placeholder Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
-          <strong>Note:</strong> This is a placeholder dashboard. Real data will be connected in later phases.
-        </p>
+      {/* Widgets Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <RecentOrdersWidget orders={formattedOrders} />
+        <LowStockWidget medicines={formattedLowStock} />
+        <ActivityFeedWidget activities={activities} />
       </div>
     </div>
   );

@@ -14,9 +14,10 @@ const protectedRoutes = [
   '/orders',
   '/track',
   '/dashboard',
-  '/medicines',
-  '/delivery-men',
-  '/tracking',
+  '/admin/medicines',
+  '/admin/delivery-men',
+  '/admin/tracking',
+  '/admin/orders',
   '/my-orders',
   '/active',
 ];
@@ -25,20 +26,21 @@ const protectedRoutes = [
 const roleRoutes: Record<string, string[]> = {
   // Admin only routes
   '/dashboard': ['admin'],
-  '/medicines': ['admin'],
-  '/delivery-men': ['admin'],
-  '/tracking': ['admin'],
-  
+  '/admin/medicines': ['admin'],
+  '/admin/delivery-men': ['admin'],
+  '/admin/tracking': ['admin'],
+  '/admin/orders': ['admin'],
+
   // Delivery only routes
   '/my-orders': ['delivery'],
   '/active': ['delivery'],
-  
+
   // Customer only routes
   '/cart': ['customer'],
   '/checkout': ['customer'],
-  
+
   // Multiple roles allowed
-  '/orders': ['customer', 'admin'],
+  '/orders': ['customer'],
   '/shop': ['customer', 'admin'], // Admin can view shop too
 };
 
@@ -55,9 +57,9 @@ const publicRoutes = [
 // Middleware Function
 // =============================================================================
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip middleware for static files and API routes (except protected ones)
   if (
     pathname.startsWith('/_next') ||
@@ -69,7 +71,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if route is public
-  const isPublicRoute = publicRoutes.some(route => 
+  const isPublicRoute = publicRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 
@@ -98,7 +100,7 @@ export async function middleware(request: NextRequest) {
   // Check role-based access
   if (token) {
     const userRole = token.role as string;
-    
+
     // Find matching role route
     for (const [route, allowedRoles] of Object.entries(roleRoutes)) {
       if (pathname === route || pathname.startsWith(`${route}/`)) {

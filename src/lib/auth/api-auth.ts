@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-response';
+import { errorResponse, unauthorizedResponse, forbiddenResponse, ApiErrorResponse } from '@/lib/api-response';
 
 // =============================================================================
 // API Route Protection Helpers
@@ -105,20 +105,21 @@ export async function requireApiCustomer(
 type ApiHandler<T = unknown> = (
   request: NextRequest,
   context: { user: AuthUser; params?: Record<string, string> }
-) => Promise<NextResponse<T>>;
+) => Promise<NextResponse<T> | NextResponse<ApiErrorResponse>>;
 
 /**
  * Wrap an API handler with authentication
  */
 export function withAuth<T>(handler: ApiHandler<T>) {
-  return async (request: NextRequest, context?: { params?: Record<string, string> }) => {
+  return async (request: NextRequest, context?: { params?: Promise<Record<string, string>> }) => {
     const result = await requireApiAuth(request);
 
     if ('error' in result) {
       return result.error;
     }
 
-    return handler(request, { user: result.user, params: context?.params });
+    const params = context?.params ? await context.params : undefined;
+    return handler(request, { user: result.user, params });
   };
 }
 
@@ -126,14 +127,15 @@ export function withAuth<T>(handler: ApiHandler<T>) {
  * Wrap an API handler with role-based authentication
  */
 export function withRole<T>(roles: string | string[], handler: ApiHandler<T>) {
-  return async (request: NextRequest, context?: { params?: Record<string, string> }) => {
+  return async (request: NextRequest, context?: { params?: Promise<Record<string, string>> }) => {
     const result = await requireApiRole(request, roles);
 
     if ('error' in result) {
       return result.error;
     }
 
-    return handler(request, { user: result.user, params: context?.params });
+    const params = context?.params ? await context.params : undefined;
+    return handler(request, { user: result.user, params });
   };
 }
 

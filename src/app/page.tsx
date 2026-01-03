@@ -1,14 +1,18 @@
 import Link from 'next/link';
-import { Navbar } from '@/components/layout';
-import { Footer } from '@/components/layout';
-import { 
-  Truck, 
-  Shield, 
-  Clock, 
+import {
+  Truck,
+  Shield,
+  Clock,
   MapPin,
   ArrowRight,
-  Package
+  Package,
+  Star,
 } from 'lucide-react';
+import connectDB from '@/lib/db/mongoose';
+import { Medicine } from '@/lib/db/models';
+import { ProductCard } from '@/components/customer';
+import { Button } from '@/components/ui';
+import { Navbar, Footer } from '@/components/layout';
 
 const features = [
   {
@@ -33,58 +37,110 @@ const features = [
   },
 ];
 
-const categories = [
-  { name: 'Pain Relief', count: 24, color: 'bg-red-100 text-red-600' },
-  { name: 'Cold & Flu', count: 18, color: 'bg-blue-100 text-blue-600' },
-  { name: 'Digestive Health', count: 15, color: 'bg-green-100 text-green-600' },
-  { name: 'Vitamins', count: 32, color: 'bg-yellow-100 text-yellow-600' },
-  { name: 'First Aid', count: 21, color: 'bg-purple-100 text-purple-600' },
-  { name: 'Skin Care', count: 27, color: 'bg-pink-100 text-pink-600' },
-];
+async function getFeaturedProducts() {
+  try {
+    await connectDB();
 
-export default function HomePage() {
+    const products = await Medicine.find({
+      isActive: true,
+      isFeatured: true,
+      stock: { $gt: 0 },
+    })
+      .select('name slug description price compareAtPrice category image manufacturer stock isFeatured')
+      .limit(4)
+      .lean();
+
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    return [];
+  }
+}
+
+async function getCategories() {
+  try {
+    await connectDB();
+
+    const categories = await Medicine.aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+      { $limit: 6 },
+    ]);
+
+    return JSON.parse(JSON.stringify(categories));
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const [featuredProducts, categories] = await Promise.all([
+    getFeaturedProducts(),
+    getCategories(),
+  ]);
+
+  const categoryColors = [
+    'bg-red-100 text-red-600',
+    'bg-blue-100 text-blue-600',
+    'bg-green-100 text-green-600',
+    'bg-yellow-100 text-yellow-600',
+    'bg-purple-100 text-purple-600',
+    'bg-pink-100 text-pink-600',
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-500 to-primary-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white overflow-hidden relative">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Your Health,{' '}
-                <span className="text-primary-200">Delivered</span>
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-primary-100 text-sm font-medium mb-6 border border-white/20">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                Now delivering in your area
+              </div>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+                Your Health, <br />
+                <span className="text-primary-300">Delivered.</span>
               </h1>
-              <p className="mt-6 text-lg md:text-xl text-primary-100 max-w-lg">
-                Get OTC medicines delivered to your doorstep with live tracking. 
+              <p className="mt-8 text-xl text-primary-100/90 max-w-lg leading-relaxed">
+                Get over-the-counter medicines delivered to your doorstep with real-time tracking.
                 Fast, reliable, and always there when you need us.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center gap-2 bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
-                >
-                  Shop Now
-                  <ArrowRight className="w-5 h-5" />
+              <div className="mt-10 flex flex-wrap gap-5">
+                <Link href="/shop">
+                  <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 px-10 h-14 text-lg font-bold shadow-xl">
+                    Shop Now
+                    <ArrowRight className="w-6 h-6 ml-2" />
+                  </Button>
                 </Link>
-                <Link
-                  href="/track"
-                  className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-800 transition-colors border border-primary-400"
-                >
-                  Track Order
-                  <MapPin className="w-5 h-5" />
+                <Link href="/orders">
+                  <Button size="lg" variant="secondary" className="bg-primary-700/50 hover:bg-primary-700 text-white border border-primary-500/50 backdrop-blur-sm px-10 h-14 text-lg font-bold">
+                    Track Order
+                    <MapPin className="w-6 h-6 ml-2 text-primary-300" />
+                  </Button>
                 </Link>
               </div>
             </div>
-            <div className="hidden md:flex justify-center">
-              <div className="relative">
-                <div className="w-72 h-72 bg-primary-400/30 rounded-full absolute -top-4 -left-4" />
-                <div className="relative bg-white rounded-2xl shadow-2xl p-8">
-                  <Package className="w-32 h-32 text-primary-500 mx-auto" />
-                  <p className="text-gray-900 font-semibold text-center mt-4">
-                    Order medicines online
-                  </p>
+            <div className="hidden md:flex justify-center relative">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-500 rounded-full blur-[100px] opacity-20"></div>
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary-400 to-primary-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-12 shadow-2xl">
+                  <Package className="w-48 h-48 text-white drop-shadow-2xl" />
+                  <div className="mt-8 text-center">
+                    <p className="text-white text-2xl font-bold">Freshly Packed</p>
+                    <p className="text-primary-200 text-sm mt-1 uppercase tracking-widest font-medium">Coming to you soon</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -93,14 +149,15 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
               Why Choose MedDelivery?
             </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              We make getting your OTC medicines simple, fast, and reliable.
+            <div className="w-20 h-1.5 bg-primary-500 mx-auto mt-4 rounded-full"></div>
+            <p className="mt-6 text-xl text-gray-600 max-w-2xl mx-auto">
+              We've redesigned the pharmacy experience to be faster, safer, and completely transparent.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -109,15 +166,15 @@ export default function HomePage() {
               return (
                 <div
                   key={feature.title}
-                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-gray-50 rounded-2xl p-8 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary-100 group"
                 >
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6 text-primary-600" />
+                  <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                    <Icon className="w-8 h-8 text-primary-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-gray-600 leading-relaxed text-sm">{feature.description}</p>
                 </div>
               );
             })}
@@ -125,62 +182,120 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Browse Categories
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Find what you need from our wide range of OTC medicines.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={`/shop?category=${category.name.toLowerCase().replace(' ', '-')}`}
-                className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 text-center group"
-              >
-                <div className={`w-12 h-12 rounded-full ${category.color} mx-auto mb-3 flex items-center justify-center`}>
-                  <Package className="w-6 h-6" />
+      {/* Featured Products */}
+      {featuredProducts.length > 0 && (
+        <section className="py-24 bg-gray-50/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between mb-16">
+              <div>
+                <div className="inline-flex items-center gap-2 text-primary-600 font-bold text-sm uppercase tracking-widest mb-2">
+                  <Star className="w-4 h-4 fill-primary-600" />
+                  Trending Medicines
                 </div>
-                <h3 className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-sm text-gray-500 mt-1">
-                  {category.count} products
-                </p>
+                <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
+                  Featured Products
+                </h2>
+              </div>
+              <Link
+                href="/shop?featured=true"
+                className="hidden sm:inline-flex items-center gap-2 group text-primary-600 font-bold hover:text-primary-700 transition-colors"
+              >
+                View Catalog
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-            ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product: any) => (
+                <ProductCard
+                  key={product._id}
+                  product={{
+                    ...product,
+                    _id: product._id.toString(),
+                    inStock: product.stock > 0,
+                    discountPercentage: product.compareAtPrice && product.compareAtPrice > product.price
+                      ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+                      : 0,
+                  }}
+                />
+              ))}
+            </div>
+            <div className="mt-12 text-center sm:hidden">
+              <Link href="/shop?featured=true">
+                <Button className="w-full h-12 rounded-xl text-lg font-bold">
+                  View All Products
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Categories Section */}
+      {categories.length > 0 && (
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
+                Browse by Category
+              </h2>
+              <p className="mt-4 text-xl text-gray-600">
+                Find exactly what you need in our curated collections.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {categories.map((category: any, index: number) => (
+                <Link
+                  key={category._id}
+                  href={`/shop?category=${encodeURIComponent(category._id)}`}
+                  className="group relative"
+                >
+                  <div className="bg-gray-50 rounded-3xl p-6 text-center hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-transparent hover:border-primary-100 flex flex-col items-center">
+                    <div className={`w-16 h-16 rounded-2xl ${categoryColors[index % categoryColors.length]} mb-4 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+                      <Package className="w-8 h-8" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                      {category._id}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-2 font-medium bg-gray-100 px-2.5 py-1 rounded-full group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                      {category.count} items
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
-            Create an account today and get your first delivery with free shipping!
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
-            >
-              Create Account
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 bg-gray-800 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
-            >
-              Browse as Guest
-            </Link>
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto relative">
+          <div className="bg-primary-600 rounded-[40px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary-400 rounded-full blur-[100px] opacity-20"></div>
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary-800 rounded-full blur-[100px] opacity-30"></div>
+
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-8">
+                Get Started with MedDelivery
+              </h2>
+              <p className="text-2xl text-primary-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+                Join thousands of happy customers and get your first delivery with <span className="text-white font-bold underline">FREE shipping</span>!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Link href="/register">
+                  <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 px-12 h-16 text-xl font-bold shadow-xl sm:w-auto w-full">
+                    Create Account
+                    <ArrowRight className="w-6 h-6 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/shop">
+                  <Button size="lg" variant="secondary" className="bg-primary-700 hover:bg-primary-800 text-white border border-primary-500 px-12 h-16 text-xl font-bold sm:w-auto w-full">
+                    Browse catalog
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -189,3 +304,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+

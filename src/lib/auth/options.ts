@@ -24,8 +24,8 @@ export const authOptions: NextAuthOptions = {
           await connectDB();
 
           // Find user with password field included
-          const user = await User.findOne({ 
-            email: credentials.email.toLowerCase() 
+          const user = await User.findOne({
+            email: credentials.email.toLowerCase()
           }).select('+password');
 
           if (!user) {

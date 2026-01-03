@@ -95,7 +95,7 @@ const MedicineSchema = new Schema<IMedicine>(
     },
     image: {
       type: String,
-      default: '/images/placeholder-medicine.png',
+      default: '/images/placeholder-medicine.svg',
     },
     images: [String],
     manufacturer: {
@@ -133,7 +133,6 @@ const MedicineSchema = new Schema<IMedicine>(
 // =============================================================================
 
 MedicineSchema.index({ name: 'text', description: 'text', tags: 'text' });
-MedicineSchema.index({ slug: 1 });
 MedicineSchema.index({ category: 1 });
 MedicineSchema.index({ price: 1 });
 MedicineSchema.index({ isActive: 1, isFeatured: 1 });

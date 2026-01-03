@@ -5,7 +5,7 @@ import connectDB from '@/lib/db/mongoose';
 export async function GET() {
   try {
     await connectDB();
-    
+
     const dbState = mongoose.connection.readyState;
     const states: Record<number, string> = {
       0: 'disconnected',
@@ -13,7 +13,7 @@ export async function GET() {
       2: 'connecting',
       3: 'disconnecting',
     };
-    
+
     return NextResponse.json({
       success: true,
       status: 'healthy',

@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Menu, 
-  X, 
-  ShoppingCart, 
+import {
+  Menu,
+  X,
+  ShoppingCart,
   Package,
   LogOut,
   LayoutDashboard,
@@ -23,22 +23,22 @@ export function Navbar() {
 
   const getRoleBasedLinks = () => {
     if (!user) return [];
-    
+
     if (isAdmin) {
       return [
         { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { href: '/medicines', label: 'Medicines', icon: Package },
-        { href: '/orders', label: 'Orders', icon: Package },
+        { href: '/admin/medicines', label: 'Medicines', icon: Package },
+        { href: '/admin/orders', label: 'Orders', icon: Package },
       ];
     }
-    
+
     if (isDelivery) {
       return [
         { href: '/my-orders', label: 'My Orders', icon: Package },
         { href: '/active', label: 'Active Delivery', icon: Package },
       ];
     }
-    
+
     // Customer
     return [
       { href: '/shop', label: 'Shop', icon: Package },
@@ -80,16 +80,15 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      pathname.startsWith(link.href)
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith(link.href)
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-gray-600 hover:text-primary-500'
-                    }`}
+                      }`}
                   >
                     {link.label}
                   </Link>
                 ))}
-                
+
                 {isCustomer && (
                   <Link
                     href="/cart"
@@ -101,7 +100,7 @@ export function Navbar() {
                     </span>
                   </Link>
                 )}
-                
+
                 {/* User Menu */}
                 <div className="relative ml-4 pl-4 border-l border-gray-200">
                   <button
@@ -114,10 +113,10 @@ export function Navbar() {
                     <span className="hidden lg:block">{user?.name}</span>
                     <ChevronDown className="w-4 h-4" />
                   </button>
-                  
+
                   {showUserMenu && (
                     <>
-                      <div 
+                      <div
                         className="fixed inset-0 z-10"
                         onClick={() => setShowUserMenu(false)}
                       />
@@ -188,22 +187,21 @@ export function Navbar() {
                   <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-                
+
                 {getRoleBasedLinks().map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`block px-3 py-2 rounded-md ${
-                      pathname.startsWith(link.href)
+                    className={`block px-3 py-2 rounded-md ${pathname.startsWith(link.href)
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                      }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
                   </Link>
                 ))}
-                
+
                 {isCustomer && (
                   <Link
                     href="/cart"
@@ -214,7 +212,7 @@ export function Navbar() {
                     Cart
                   </Link>
                 )}
-                
+
                 <button
                   onClick={() => {
                     setIsOpen(false);
