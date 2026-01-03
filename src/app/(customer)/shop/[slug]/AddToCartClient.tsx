@@ -1,65 +1,35 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ShoppingCart, Minus, Plus } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { Button } from '@/components/ui';
+import React from 'react';
+import { AddToCartButton } from '@/components/cart';
 
-interface AddToCartButtonProps {
-    productId: string;
-    productName: string;
-    inStock: boolean;
+interface AddToCartClientProps {
+    product: {
+        _id: string;
+        name: string;
+        slug: string;
+        price: number;
+        compareAtPrice?: number;
+        image?: string;
+        manufacturer: string;
+        category: string;
+        stock: number;
+    };
 }
 
-export function AddToCartButton({ productId, productName, inStock }: AddToCartButtonProps) {
-    const [quantity, setQuantity] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleAddToCart = async () => {
-        setIsLoading(true);
-        try {
-            // Will be implemented in Day 10
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            toast.success(`${quantity} x ${productName} added to cart!`);
-        } catch (error) {
-            toast.error('Failed to add to cart');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
+export function AddToCartClient({ product }: AddToCartClientProps) {
     return (
-        <div className="flex items-center gap-4">
-            {/* Quantity Selector */}
-            <div className="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                <button
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    disabled={!inStock || quantity <= 1}
-                    className="p-3 text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-                >
-                    <Minus className="w-4 h-4" />
-                </button>
-                <span className="w-12 text-center font-medium text-gray-900">{quantity}</span>
-                <button
-                    onClick={() => setQuantity((q) => q + 1)}
-                    disabled={!inStock}
-                    className="p-3 text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-                >
-                    <Plus className="w-4 h-4" />
-                </button>
-            </div>
-
-            {/* Add to Cart Button */}
-            <Button
+        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <AddToCartButton
+                product={product}
+                showQuantity
                 size="lg"
-                onClick={handleAddToCart}
-                disabled={!inStock}
-                isLoading={isLoading}
-                leftIcon={<ShoppingCart className="w-5 h-5" />}
-                className="flex-1"
-            >
-                {inStock ? 'Add to Cart' : 'Out of Stock'}
-            </Button>
+                fullWidth
+            />
+
+            <p className="text-xs text-gray-500 mt-4 text-center">
+                Secure transaction • Free delivery on orders over $50
+            </p>
         </div>
     );
 }
