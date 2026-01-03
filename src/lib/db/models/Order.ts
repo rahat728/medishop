@@ -273,26 +273,6 @@ OrderSchema.index({ paymentStatus: 1 });
 OrderSchema.index({ createdAt: -1 });
 
 // =============================================================================
-// Pre-save Middleware - Generate Order Number
-// =============================================================================
-
-OrderSchema.pre('save', async function () {
-  if (this.isNew && !this.orderNumber) {
-    const date = new Date();
-    const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
-    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-    this.orderNumber = `ORD-${dateStr}-${random}`;
-
-    // Add initial status to history
-    this.statusHistory = [{
-      status: 'pending',
-      timestamp: new Date(),
-      note: 'Order created',
-    }];
-  }
-});
-
-// =============================================================================
 // Instance Methods
 // =============================================================================
 

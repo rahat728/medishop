@@ -6,6 +6,7 @@ import { ArrowLeft, MapPin, CreditCard, ShoppingBag, Banknote, ShieldCheck } fro
 import { useCartStore, useCheckoutStore } from '@/store';
 import { Button } from '@/components/ui';
 import { CartItem } from '@/components/cart';
+import { PaymentWrapper } from './stripe';
 import toast from 'react-hot-toast';
 
 export function OrderReview() {
@@ -19,7 +20,7 @@ export function OrderReview() {
     const tax = subtotal * 0.08;
     const total = subtotal + deliveryFee + tax;
 
-    const handlePlaceOrder = async () => {
+    const handlePlaceOrderCOD = async () => {
         setIsProcessing(true);
         try {
             const response = await fetch('/api/orders', {
@@ -36,7 +37,7 @@ export function OrderReview() {
                         state: shippingAddress?.state,
                         zipCode: shippingAddress?.zipCode,
                     },
-                    paymentMethod: paymentMethod === 'card' ? 'stripe' : 'cod',
+                    paymentMethod: 'cod',
                     totalAmount: total,
                     // Extra info for notification/display
                     customerInfo: {
@@ -160,25 +161,45 @@ export function OrderReview() {
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-100">
-                <Button
-                    variant="secondary"
-                    className="w-full sm:w-auto px-8"
-                    onClick={() => setStep(2)}
-                    leftIcon={<ArrowLeft className="w-4 h-4" />}
-                    disabled={isProcessing}
-                >
-                    Back to Payment
-                </Button>
-                <Button
-                    size="lg"
-                    className="w-full sm:w-auto px-12 shadow-xl shadow-primary-200 text-lg py-6"
-                    onClick={handlePlaceOrder}
-                    isLoading={isProcessing}
-                >
-                    Place Order & Pay ${total.toFixed(2)}
-                </Button>
+            {/* Payment Action Section */}
+            <div className="pt-8 border-t border-gray-100">
+                {paymentMethod === 'card' ? (
+                    <div className="max-w-lg mx-auto">
+                        <PaymentWrapper />
+                    </div>
+                ) : (
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <Button
+                            variant="secondary"
+                            className="w-full sm:w-auto px-8"
+                            onClick={() => setStep(2)}
+                            leftIcon={<ArrowLeft className="w-4 h-4" />}
+                            disabled={isProcessing}
+                        >
+                            Back to Payment
+                        </Button>
+                        <Button
+                            size="lg"
+                            className="w-full sm:w-auto px-12 shadow-xl shadow-primary-200 text-lg py-6"
+                            onClick={handlePlaceOrderCOD}
+                            isLoading={isProcessing}
+                        >
+                            Place Order & Pay ${total.toFixed(2)}
+                        </Button>
+                    </div>
+                )}
             </div>
+
+            {paymentMethod === 'card' && (
+                <div className="flex justify-center">
+                    <button
+                        onClick={() => setStep(2)}
+                        className="text-sm font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest transition-colors"
+                    >
+                        Back to Payment Selection
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

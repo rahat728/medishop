@@ -8,6 +8,13 @@ import { Button } from '@/components/ui';
 export function PaymentMethod() {
     const { paymentMethod, setPaymentMethod, setStep } = useCheckoutStore();
 
+    const handleContinue = () => {
+        // Both methods lead to OrderReview (Step 3)
+        // For Card, Step 3 will show the Stripe Form
+        // For COD, Step 3 will show a "Place Order" button
+        setStep(3);
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex items-center gap-3 pb-6 border-b border-gray-100">
@@ -92,7 +99,7 @@ export function PaymentMethod() {
                 <Button
                     size="lg"
                     className="px-8 shadow-lg shadow-primary-100"
-                    onClick={() => setStep(3)}
+                    onClick={handleContinue}
                     rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
                     Review Order

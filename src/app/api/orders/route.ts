@@ -149,7 +149,7 @@ export const POST = withAuth(async (request, { user }) => {
         const validation = createOrderSchema.safeParse(body);
         if (!validation.success) {
             return validationErrorResponse(
-                validation.error.errors.map((e) => e.message)
+                validation.error.issues.map((e: any) => e.message)
             );
         }
 
@@ -198,8 +198,15 @@ export const POST = withAuth(async (request, { user }) => {
         const tax = subtotal * 0.08;
         const totalAmount = subtotal + deliveryFee + tax;
 
+        // Generate order number explicitly
+        const date = new Date();
+        const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const orderNumber = `ORD-${dateStr}-${random}`;
+
         // Create order
         const order = await Order.create({
+            orderNumber,
             customer: user.id,
             items: orderItems,
             subtotal,
@@ -210,6 +217,13 @@ export const POST = withAuth(async (request, { user }) => {
             paymentMethod,
             paymentStatus: 'pending',
             status: 'pending',
+            statusHistory: [
+                {
+                    status: 'pending',
+                    timestamp: new Date(),
+                    note: 'Order placed successfully',
+                },
+            ],
             notes,
         });
 
