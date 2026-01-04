@@ -12,9 +12,10 @@ import toast from 'react-hot-toast';
 
 interface CheckoutFormProps {
     amount: number;
+    orderId: string;
 }
 
-export function CheckoutForm({ amount }: CheckoutFormProps) {
+export function CheckoutForm({ amount, orderId }: CheckoutFormProps) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -36,7 +37,7 @@ export function CheckoutForm({ amount }: CheckoutFormProps) {
             elements,
             confirmParams: {
                 // Return URL where Stripe redirects after payment
-                return_url: `${window.location.origin}/checkout/success`,
+                return_url: `${window.location.origin}/checkout/success?orderId=${orderId}`,
             },
         });
 

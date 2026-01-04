@@ -8,9 +8,10 @@ import {
   Package,
   Boxes,
   ShoppingBag,
-  Users,
-  MapPin,
+  MapPin, // Added MapPin
   BarChart3,
+  Truck,
+  Users,
   Settings,
   LogOut,
   ChevronLeft,
@@ -30,12 +31,13 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/medicines', label: 'Medicines', icon: Package },
-  { href: '/stock', label: 'Stock Management', icon: Boxes },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag, badge: 3 },
+  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+  { href: '/admin/logistics', label: 'Logistics', icon: Truck },
   { href: '/admin/delivery-men', label: 'Delivery Team', icon: Users },
   { href: '/admin/tracking', label: 'Live Tracking', icon: MapPin },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
 ];
 
 const bottomMenuItems: MenuItem[] = [
@@ -52,7 +54,7 @@ export function AdminSidebar() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className={`p-4 border-b border-gray-100 ${isCollapsed ? 'px-2' : 'px-6'}`}>
-        <Link href="/dashboard" className="flex items-center gap-3">
+        <Link href="/admin" className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-xl">M</span>
           </div>

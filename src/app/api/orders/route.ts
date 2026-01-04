@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import connectDB from '@/lib/db/mongoose';
-import { Order, Medicine } from '@/lib/db/models';
+import { Order, Medicine, User } from '@/lib/db/models';
 import { withAdmin, withAuth } from '@/lib/auth';
+import { sendOrderConfirmationEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } from '@/lib/email';
 import {
     successResponse,
     errorResponse,
@@ -11,12 +13,19 @@ import {
 import { orderQuerySchema, createOrderSchema } from '@/lib/validations/order';
 
 // =============================================================================
-// GET /api/orders - List all orders (admin only)
+// GET /api/orders - List orders (admin or delivery)
 // =============================================================================
 
-export const GET = withAdmin(async (request, { user }) => {
+export const GET = withAuth(async (request, { user }) => {
     try {
         await connectDB();
+
+        const isAdmin = user.role === 'admin';
+        const isDelivery = user.role === 'delivery';
+
+        if (!isAdmin && !isDelivery) {
+            return errorResponse('Insufficient permissions', 403);
+        }
 
         const { searchParams } = new URL(request.url);
 
@@ -33,6 +42,7 @@ export const GET = withAdmin(async (request, { user }) => {
             endDate: searchParams.get('endDate') || undefined,
             sortBy: searchParams.get('sortBy') || undefined,
             sortOrder: searchParams.get('sortOrder') || undefined,
+            type: searchParams.get('type') || undefined,
         };
 
         const queryResult = orderQuerySchema.safeParse(queryParams);
@@ -57,21 +67,50 @@ export const GET = withAdmin(async (request, { user }) => {
             endDate,
             sortBy,
             sortOrder,
+            type,
         } = queryResult.data;
 
         // Build query
         const query: any = {};
 
         if (search) {
+            // Find users matching search in name or email
+            const users = await User.find({
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                ]
+            }).select('_id');
+            const userIds = users.map(u => u._id);
+
+            // Find medicines matching search
+            const medicines = await Medicine.find({
+                name: { $regex: search, $options: 'i' }
+            }).select('_id');
+            const medicineIds = medicines.map(m => m._id);
+
             query.$or = [
                 { orderNumber: { $regex: search, $options: 'i' } },
+                { customer: { $in: userIds } },
+                { 'items.medicine': { $in: medicineIds } },
+                { 'items.name': { $regex: search, $options: 'i' } }
             ];
         }
 
         if (status) query.status = status;
         if (paymentStatus) query.paymentStatus = paymentStatus;
         if (customerId) query.customer = customerId;
-        if (deliveryManId) query.deliveryMan = deliveryManId;
+
+        // Force delivery person to only see their orders
+        if (isDelivery) {
+            query.deliveryMan = user.id;
+        } else if (deliveryManId) {
+            if (deliveryManId) query.deliveryMan = deliveryManId;
+        }
+
+        if (type === 'logistics') {
+            query.status = { $in: ['assigned', 'picked_up', 'on_the_way'] };
+        }
 
         if (startDate || endDate) {
             query.createdAt = {};
@@ -79,10 +118,8 @@ export const GET = withAdmin(async (request, { user }) => {
             if (endDate) query.createdAt.$lte = new Date(endDate);
         }
 
-        // Get total count
         const total = await Order.countDocuments(query);
 
-        // Get paginated results
         const orders = await Order.find(query)
             .populate('customer', 'name email phone')
             .populate('deliveryMan', 'name email phone')
@@ -92,26 +129,17 @@ export const GET = withAdmin(async (request, { user }) => {
             .limit(limit)
             .lean();
 
-        // Get summary stats
-        const [stats] = await Order.aggregate([
-            {
-                $group: {
-                    _id: null,
-                    totalOrders: { $sum: 1 },
-                    totalRevenue: {
-                        $sum: {
-                            $cond: [{ $eq: ['$paymentStatus', 'paid'] }, '$totalAmount', 0],
-                        },
-                    },
-                    pendingOrders: {
-                        $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
-                    },
-                    deliveredOrders: {
-                        $sum: { $cond: [{ $eq: ['$status', 'delivered'] }, 1, 0] },
-                    },
-                },
-            },
-        ]);
+        // Calculate stats only for admin
+        let stats = null;
+        if (isAdmin) {
+            const allOrders = await Order.find(query).select('totalAmount status');
+            stats = {
+                totalOrders: total,
+                totalRevenue: allOrders.reduce((sum, order) => sum + order.totalAmount, 0),
+                pendingOrders: allOrders.filter(order => order.status === 'pending').length,
+                deliveredOrders: allOrders.filter(order => order.status === 'delivered').length,
+            };
+        }
 
         return successResponse({
             orders,
@@ -123,12 +151,7 @@ export const GET = withAdmin(async (request, { user }) => {
                 hasNext: page < Math.ceil(total / limit),
                 hasPrev: page > 1,
             },
-            stats: stats || {
-                totalOrders: 0,
-                totalRevenue: 0,
-                pendingOrders: 0,
-                deliveredOrders: 0,
-            },
+            stats,
         });
     } catch (error) {
         return serverErrorResponse(error);
@@ -155,6 +178,10 @@ export const POST = withAuth(async (request, { user }) => {
 
         const { items, shippingAddress, paymentMethod, notes } = validation.data;
 
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return errorResponse('Order must have at least one item', 400);
+        }
+
         // Verify stock and calculate total
         let subtotal = 0;
         const orderItems = [];
@@ -172,7 +199,7 @@ export const POST = withAuth(async (request, { user }) => {
 
             if (medicine.stock < item.quantity) {
                 return errorResponse(
-                    `Insufficient stock for ${medicine.name}. Only ${medicine.stock} available.`,
+                    `Insufficient stock for ${medicine.name}. Only ${medicine.stock} available`,
                     400
                 );
             }
@@ -188,7 +215,7 @@ export const POST = withAuth(async (request, { user }) => {
                 subtotal: itemTotal,
             });
 
-            // Reserve stock (decrement)
+            // Reserve stock
             medicine.stock -= item.quantity;
             await medicine.save();
         }
@@ -221,14 +248,24 @@ export const POST = withAuth(async (request, { user }) => {
                 {
                     status: 'pending',
                     timestamp: new Date(),
-                    note: 'Order placed successfully',
+                    note: 'Order placed',
                 },
             ],
             notes,
         });
 
+        // Populate customer to get email for confirmation
+        const populatedOrder = await Order.findById(order._id).populate('customer');
+
+        // Send confirmation email
+        if (populatedOrder && populatedOrder.customer && (populatedOrder.customer as any).email) {
+            await sendOrderConfirmationEmail(populatedOrder, (populatedOrder.customer as any).email);
+        }
+
         return successResponse(order, 'Order created successfully', 201);
     } catch (error) {
+        console.error('ORDER_POST_ERROR:', error);
         return serverErrorResponse(error);
     }
 });
+

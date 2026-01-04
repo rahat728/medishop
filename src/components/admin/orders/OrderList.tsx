@@ -83,6 +83,8 @@ export function OrderList() {
     const [search, setSearch] = useState(searchParams.get('search') || '');
     const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
     const [paymentFilter, setPaymentFilter] = useState(searchParams.get('paymentStatus') || '');
+    const [startDate, setStartDate] = useState(searchParams.get('startDate') || '');
+    const [endDate, setEndDate] = useState(searchParams.get('endDate') || '');
 
     // =============================================================================
     // Data Fetching
@@ -99,6 +101,8 @@ export function OrderList() {
             if (search) params.set('search', search);
             if (statusFilter) params.set('status', statusFilter);
             if (paymentFilter) params.set('paymentStatus', paymentFilter);
+            if (startDate) params.set('startDate', startDate);
+            if (endDate) params.set('endDate', endDate);
 
             const response = await fetch(`/api/orders?${params}`);
             const data = await response.json();
@@ -115,7 +119,7 @@ export function OrderList() {
         } finally {
             setLoading(false);
         }
-    }, [pagination.page, pagination.limit, search, statusFilter, paymentFilter]);
+    }, [pagination.page, pagination.limit, search, statusFilter, paymentFilter, startDate, endDate]);
 
     useEffect(() => {
         fetchOrders();
@@ -201,7 +205,7 @@ export function OrderList() {
                     refunded: 'bg-gray-100 text-gray-700',
                 };
                 return (
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[value]}`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[value as PaymentStatus]}`}>
                         {value.charAt(0).toUpperCase() + value.slice(1)}
                     </span>
                 );
@@ -306,6 +310,49 @@ export function OrderList() {
                         </option>
                     ))}
                 </select>
+
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">From:</span>
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => {
+                            setStartDate(e.target.value);
+                            setPagination((prev) => ({ ...prev, page: 1 }));
+                        }}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    />
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">To:</span>
+                    <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => {
+                            setEndDate(e.target.value);
+                            setPagination((prev) => ({ ...prev, page: 1 }));
+                        }}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    />
+                </div>
+
+                {(statusFilter || paymentFilter || startDate || endDate || search) && (
+                    <Button
+                        variant="ghost"
+                        onClick={() => {
+                            setStatusFilter('');
+                            setPaymentFilter('');
+                            setStartDate('');
+                            setEndDate('');
+                            setSearch('');
+                            setPagination((prev) => ({ ...prev, page: 1 }));
+                        }}
+                        className="text-primary-600 hover:text-primary-700"
+                    >
+                        Clear Filters
+                    </Button>
+                )}
             </div>
 
             {/* Table */}

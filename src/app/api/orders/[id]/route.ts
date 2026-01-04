@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
 import connectDB from '@/lib/db/mongoose';
 import { Order } from '@/lib/db/models';
-import { withAdmin } from '@/lib/auth';
+import { withAuth } from '@/lib/auth';
 import {
     successResponse,
     errorResponse,
@@ -11,10 +11,10 @@ import {
 } from '@/lib/api-response';
 
 // =============================================================================
-// GET /api/orders/[id] - Get single order (admin only)
+// GET /api/orders/[id] - Get single order
 // =============================================================================
 
-export const GET = withAdmin(async (request, { user, params }) => {
+export const GET = withAuth(async (request, { user, params }) => {
     try {
         await connectDB();
 
@@ -34,6 +34,15 @@ export const GET = withAdmin(async (request, { user, params }) => {
             return notFoundResponse('Order not found');
         }
 
+        // Access Control: Admin, Delivery Partner assigned to this order, or the Customer who placed it
+        const isAdmin = user.role === 'admin';
+        const isDelivery = user.role === 'delivery' && order.deliveryMan?._id?.toString() === user.id;
+        const isCustomer = user.role === 'customer' && order.customer?._id?.toString() === user.id;
+
+        if (!isAdmin && !isDelivery && !isCustomer) {
+            return errorResponse('Insufficient permissions', 403);
+        }
+
         return successResponse(order);
     } catch (error) {
         return serverErrorResponse(error);
@@ -41,10 +50,10 @@ export const GET = withAdmin(async (request, { user, params }) => {
 });
 
 // =============================================================================
-// PUT /api/orders/[id] - Update order (admin only)
+// PUT /api/orders/[id] - Update order (admin or delivery)
 // =============================================================================
 
-export const PUT = withAdmin(async (request, { user, params }) => {
+export const PUT = withAuth(async (request, { user, params }) => {
     try {
         await connectDB();
 
@@ -55,30 +64,76 @@ export const PUT = withAdmin(async (request, { user, params }) => {
         }
 
         const body = await request.json();
+        const { status, note, deliveryManId, deliveryNotes, notes, estimatedDelivery } = body;
 
-        // Only allow updating specific fields
-        const allowedFields = ['deliveryNotes', 'notes', 'estimatedDelivery'];
-        const updateData: any = {};
-
-        for (const field of allowedFields) {
-            if (body[field] !== undefined) {
-                updateData[field] = body[field];
-            }
-        }
-
-        const order = await Order.findByIdAndUpdate(
-            id,
-            { $set: updateData },
-            { new: true, runValidators: true }
-        )
-            .populate('customer', 'name email phone')
-            .populate('deliveryMan', 'name email phone');
+        const order = await Order.findById(id).populate('customer');
 
         if (!order) {
             return notFoundResponse('Order not found');
         }
 
-        return successResponse(order, 'Order updated successfully');
+        const isAdmin = user.role === 'admin';
+        const isDelivery = user.role === 'delivery' && (
+            order.deliveryMan?.toString() === user.id ||
+            (order.deliveryMan as any)?._id?.toString() === user.id
+        );
+
+        if (!isAdmin && !isDelivery) {
+            return errorResponse('Insufficient permissions', 403);
+        }
+
+        // Update status if provided
+        if (status) {
+            const validAdminStatuses = ['pending', 'confirmed', 'assigned', 'picked_up', 'on_the_way', 'delivered', 'cancelled'];
+            const validDeliveryStatuses = ['picked_up', 'on_the_way', 'delivered'];
+
+            const allowedStatuses = isAdmin ? validAdminStatuses : validDeliveryStatuses;
+
+            if (!allowedStatuses.includes(status)) {
+                return errorResponse(`Invalid or unauthorized status update: ${status}`, 400);
+            }
+
+            order.status = status;
+            order.statusHistory.push({
+                status,
+                timestamp: new Date(),
+                note: note || `Status updated to ${status}`,
+                updatedBy: new mongoose.Types.ObjectId(user.id),
+            });
+        }
+
+        // Handle Assignment (Admin Only)
+        if (deliveryManId && isAdmin) {
+            if (deliveryManId === 'none') {
+                order.deliveryMan = undefined;
+            } else if (mongoose.Types.ObjectId.isValid(deliveryManId)) {
+                order.deliveryMan = new mongoose.Types.ObjectId(deliveryManId);
+                // Auto-update status to assigned if currently pending or confirmed
+                if (['pending', 'confirmed'].includes(order.status)) {
+                    order.status = 'assigned';
+                    order.statusHistory.push({
+                        status: 'assigned',
+                        timestamp: new Date(),
+                        note: 'Delivery partner assigned',
+                        updatedBy: new mongoose.Types.ObjectId(user.id),
+                    });
+                }
+            }
+        }
+
+        // Update basic fields
+        if (deliveryNotes !== undefined) order.deliveryNotes = deliveryNotes;
+        if (notes !== undefined) order.notes = notes;
+        if (estimatedDelivery !== undefined) order.estimatedDelivery = estimatedDelivery;
+
+        await order.save();
+
+        // Populate for response
+        const updatedOrder = await Order.findById(id)
+            .populate('customer', 'name email phone')
+            .populate('deliveryMan', 'name email phone');
+
+        return successResponse(updatedOrder, 'Order updated successfully');
     } catch (error) {
         return serverErrorResponse(error);
     }

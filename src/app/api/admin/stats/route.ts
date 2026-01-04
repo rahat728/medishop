@@ -40,6 +40,53 @@ export const GET = withAdmin(async (request, { user }) => {
       },
     ]);
 
+    // Get revenue trends (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const revenueTrends = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: sevenDaysAgo },
+          paymentStatus: 'paid',
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          revenue: { $sum: '$totalAmount' },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // Top selling medicines
+    const topMedicines = await Order.aggregate([
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: '$items.medicine',
+          name: { $first: '$items.name' },
+          totalQty: { $sum: '$items.quantity' },
+          revenue: { $sum: '$items.subtotal' },
+        },
+      },
+      { $sort: { totalQty: -1 } },
+      { $limit: 5 },
+    ]);
+
+    // Status distribution
+    const statusDistribution = await Order.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
     return successResponse({
       totalOrders: orderCount,
       totalMedicines: medicineCount,
@@ -47,6 +94,9 @@ export const GET = withAdmin(async (request, { user }) => {
       totalCustomers: customerCount,
       todayOrders,
       todayRevenue: todayRevenue[0]?.total || 0,
+      revenueTrends,
+      topMedicines,
+      statusDistribution,
       requestedBy: user.email,
     });
   } catch (error) {

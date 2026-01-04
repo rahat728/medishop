@@ -165,7 +165,16 @@ export function OrderReview() {
             <div className="pt-8 border-t border-gray-100">
                 {paymentMethod === 'card' ? (
                     <div className="max-w-lg mx-auto">
-                        <PaymentWrapper />
+                        <PaymentWrapper shippingAddress={{
+                            street: shippingAddress.address,
+                            city: shippingAddress.city,
+                            state: shippingAddress.state,
+                            zipCode: shippingAddress.zipCode,
+                            apartment: shippingAddress.apartment,
+                            firstName: shippingAddress.firstName,
+                            lastName: shippingAddress.lastName,
+                            phone: shippingAddress.phone
+                        }} />
                     </div>
                 ) : (
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

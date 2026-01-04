@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { CheckCircle, ArrowRight, Package, Home, Calendar } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/ui';
+import { SuccessHandler } from '@/components/checkout/success/SuccessHandler';
 
 interface SuccessPageProps {
     searchParams: Promise<{ orderId: string }>;
@@ -11,7 +12,9 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
     return (
         <div className="bg-gray-50 min-h-screen pt-12 pb-24">
+            <SuccessHandler />
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* ... rest of the page ... */}
                 <div className="text-center">
                     <div className="inline-flex items-center justify-center w-24 h-24 bg-green-100 rounded-full mb-8 shadow-lg shadow-green-100 animate-bounce">
                         <CheckCircle className="w-12 h-12 text-green-600" />

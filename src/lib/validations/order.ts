@@ -122,6 +122,7 @@ export const orderQuerySchema = z.object({
     endDate: z.string().optional(),
     sortBy: z.enum(['createdAt', 'totalAmount', 'status']).default('createdAt'),
     sortOrder: z.enum(['asc', 'desc']).default('desc'),
+    type: z.enum(['all', 'logistics']).optional(),
 });
 
 export type OrderQuery = z.infer<typeof orderQuerySchema>;

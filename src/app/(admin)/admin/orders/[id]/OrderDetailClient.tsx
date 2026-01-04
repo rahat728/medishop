@@ -20,8 +20,10 @@ import {
     OrderTimeline,
     OrderStatusSelect,
     OrderItemsList,
+    AssignDriverModal,
 } from '@/components/admin/orders';
 import type { OrderStatus, PaymentStatus } from '@/lib/validations/order';
+import toast from 'react-hot-toast';
 
 interface OrderDetailClientProps {
     order: any; // Order type is complex with populated fields
@@ -30,6 +32,7 @@ interface OrderDetailClientProps {
 export function OrderDetailClient({ order }: OrderDetailClientProps) {
     const router = useRouter();
     const [currentStatus, setCurrentStatus] = useState<OrderStatus>(order.status);
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
 
     useEffect(() => {
         setCurrentStatus(order.status);
@@ -37,6 +40,21 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
 
     const refreshData = () => {
         router.refresh();
+    };
+
+    const handleAssignDriver = async (driverId: string) => {
+        const response = await fetch(`/api/orders/${order._id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ deliveryManId: driverId }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to assign driver');
+        }
+        toast.success('Driver assigned! Order moved to logistics.');
+        refreshData();
     };
 
     return (
@@ -190,12 +208,35 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                             <div className="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                                 <Truck className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                                 <p className="text-sm text-gray-500">No delivery partner assigned</p>
-                                <Button variant="secondary" size="sm" className="mt-2">
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => setIsAssignModalOpen(true)}
+                                >
                                     Assign Driver
                                 </Button>
                             </div>
                         )}
+
+                        {order.deliveryMan && (
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                className="w-full mt-4"
+                                onClick={() => setIsAssignModalOpen(true)}
+                            >
+                                Change Driver
+                            </Button>
+                        )}
                     </Card>
+
+                    <AssignDriverModal
+                        isOpen={isAssignModalOpen}
+                        onClose={() => setIsAssignModalOpen(false)}
+                        onAssign={handleAssignDriver}
+                        currentDriverId={order.deliveryMan?._id}
+                    />
 
                     {/* Timeline */}
                     <Card className="p-6">
