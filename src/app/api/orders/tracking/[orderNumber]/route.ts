@@ -5,11 +5,12 @@ import { successResponse, notFoundResponse, serverErrorResponse } from '@/lib/ap
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderNumber: string } }
+  props: { params: Promise<{ orderNumber: string }> }
 ) {
   try {
     await connectDB();
 
+    const params = await props.params;
     const orderNumber = params.orderNumber;
 
     const order = await Order.findOne({ orderNumber })
@@ -32,11 +33,11 @@ export async function GET(
       deliveryLocation: order.deliveryLocation,
       deliveryMan: order.deliveryMan
         ? {
-            _id: (order.deliveryMan as any)._id.toString(),
-            name: (order.deliveryMan as any).name,
-            phone: (order.deliveryMan as any).phone,
-            lastLocation: (order.deliveryMan as any).lastLocation,
-          }
+          _id: (order.deliveryMan as any)._id.toString(),
+          name: (order.deliveryMan as any).name,
+          phone: (order.deliveryMan as any).phone,
+          lastLocation: (order.deliveryMan as any).lastLocation,
+        }
         : null,
       statusHistory: order.statusHistory || [],
     });
