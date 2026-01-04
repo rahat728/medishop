@@ -3,10 +3,6 @@ import connectDB from '@/lib/db/mongoose';
 import { Order } from '@/lib/db/models';
 import { successResponse, notFoundResponse, serverErrorResponse } from '@/lib/api-response';
 
-// =============================================================================
-// GET /api/orders/tracking/[orderNumber] - Public tracking
-// =============================================================================
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { orderNumber: string } }
@@ -14,10 +10,11 @@ export async function GET(
   try {
     await connectDB();
 
-    const { orderNumber } = params;
+    const orderNumber = params.orderNumber;
 
     const order = await Order.findOne({ orderNumber })
-      .populate('deliveryMan', 'name phone currentLocation')
+      .populate('deliveryMan', 'name phone lastLocation')
+      .select('orderNumber status deliveryAddress deliveryLocation estimatedDelivery actualDelivery statusHistory deliveryMan createdAt')
       .lean();
 
     if (!order) {
@@ -28,11 +25,20 @@ export async function GET(
       _id: order._id.toString(),
       orderNumber: order.orderNumber,
       status: order.status,
-      deliveryAddress: order.deliveryAddress,
-      deliveryMan: order.deliveryMan,
       createdAt: order.createdAt,
       estimatedDelivery: order.estimatedDelivery,
-      statusHistory: order.statusHistory,
+      actualDelivery: order.actualDelivery,
+      deliveryAddress: order.deliveryAddress,
+      deliveryLocation: order.deliveryLocation,
+      deliveryMan: order.deliveryMan
+        ? {
+            _id: (order.deliveryMan as any)._id.toString(),
+            name: (order.deliveryMan as any).name,
+            phone: (order.deliveryMan as any).phone,
+            lastLocation: (order.deliveryMan as any).lastLocation,
+          }
+        : null,
+      statusHistory: order.statusHistory || [],
     });
   } catch (error) {
     return serverErrorResponse(error);
