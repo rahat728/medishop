@@ -1,8 +1,10 @@
 import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 
+let io: SocketIOServer | null = null;
+
 export function createSocketServer(httpServer: HTTPServer) {
-  const io = new SocketIOServer(httpServer, {
+  io = new SocketIOServer(httpServer, {
     path: '/socket.io',
     addTrailingSlash: false,
     cors: {
@@ -12,5 +14,9 @@ export function createSocketServer(httpServer: HTTPServer) {
     },
   });
 
+  return io;
+}
+
+export function getIO() {
   return io;
 }
