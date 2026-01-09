@@ -10,7 +10,9 @@ import { authOptions } from './options';
  * Get the current session on the server
  */
 export async function getSession() {
-  return await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
+  console.log('🔍 [getSession] Session:', session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
+  return session;
 }
 
 /**
@@ -28,6 +30,7 @@ export async function requireAuth() {
   const session = await getSession();
 
   if (!session?.user) {
+    console.log('🚫 [requireAuth] No session, redirecting to /login');
     redirect('/login');
   }
 
@@ -41,8 +44,10 @@ export async function requireRole(allowedRoles: string | string[]) {
   const user = await requireAuth();
 
   const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+  console.log(`🛡️ [requireRole] Checking role: ${user.role} against`, roles);
 
   if (!roles.includes(user.role)) {
+    console.log(`❌ [requireRole] Invalid role: ${user.role}, redirecting to /unauthorized`);
     redirect('/unauthorized');
   }
 
