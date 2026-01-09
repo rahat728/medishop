@@ -57,8 +57,9 @@ const publicRoutes = [
 // Middleware Function
 // =============================================================================
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  console.log(`🌐 [Middleware] Path: ${pathname}`);
 
   // Skip middleware for static files and API routes (except protected ones)
   if (
@@ -80,10 +81,20 @@ export async function proxy(request: NextRequest) {
   }
 
   // Get the token
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  let token = null;
+  try {
+    token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+    if (!process.env.NEXTAUTH_SECRET) {
+      console.warn('⚠️ [Middleware] NEXTAUTH_SECRET is not defined!');
+    }
+  } catch (error) {
+    console.error('🔥 [Middleware] Error getting token:', error);
+  }
+
+  console.log(`🌐 [Middleware] Path: ${pathname} | Token:`, token ? `Found (role: ${token.role})` : 'NULL');
 
   // Check if route requires authentication
   const isProtectedRoute = protectedRoutes.some(route =>
@@ -92,6 +103,7 @@ export async function proxy(request: NextRequest) {
 
   // Redirect to login if not authenticated
   if (isProtectedRoute && !token) {
+    console.log(`📡 [Middleware] Redirecting ${pathname} to /login (Not Authenticated)`);
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);

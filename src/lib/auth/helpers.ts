@@ -12,9 +12,7 @@ import { authOptions } from './options';
  */
 export async function getSession() {
   const session = await getServerSession(authOptions);
-  const headersList = await headers();
-  const path = headersList.get('x-invoke-path') || headersList.get('referer') || 'unknown';
-  console.log(`🔍 [getSession] Path: ${path} | Session:`, session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
+  console.log('🔍 [getSession] Session:', session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
   return session;
 }
 

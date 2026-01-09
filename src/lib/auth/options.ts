@@ -97,6 +97,7 @@ export const authOptions: NextAuthOptions = {
         token.name = session.name;
       }
 
+      console.log('🔑 [JWT Callback] Token:', token ? `Found (role: ${token.role})` : 'NULL');
       return token;
     },
 
@@ -105,6 +106,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
       }
+      console.log('👤 [Session Callback] Session:', session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
       return session;
     },
 
