@@ -5,7 +5,6 @@ export default function CustomerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log('🏠 [CustomerLayout] Rendering');
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />

@@ -15,7 +15,6 @@ async function getOrders(userId: string) {
 }
 
 export default async function CustomerOrdersPage() {
-  console.log('📦 [CustomerOrdersPage] Rendering');
   const user = await requireCustomer();
   const orders = await getOrders(user.id);
 

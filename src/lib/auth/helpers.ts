@@ -1,6 +1,5 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
 import { authOptions } from './options';
 
 // =============================================================================
@@ -11,9 +10,7 @@ import { authOptions } from './options';
  * Get the current session on the server
  */
 export async function getSession() {
-  const session = await getServerSession(authOptions);
-  console.log('🔍 [getSession] Session:', session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
-  return session;
+  return await getServerSession(authOptions);
 }
 
 /**
@@ -31,7 +28,6 @@ export async function requireAuth() {
   const session = await getSession();
 
   if (!session?.user) {
-    console.log('🚫 [requireAuth] No session, redirecting to /login');
     redirect('/login');
   }
 
@@ -45,10 +41,8 @@ export async function requireRole(allowedRoles: string | string[]) {
   const user = await requireAuth();
 
   const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-  console.log(`🛡️ [requireRole] Checking role: ${user.role} against`, roles);
 
   if (!roles.includes(user.role)) {
-    console.log(`❌ [requireRole] Invalid role: ${user.role}, redirecting to /unauthorized`);
     redirect('/unauthorized');
   }
 

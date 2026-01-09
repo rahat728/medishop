@@ -81,7 +81,6 @@ async function getCategories() {
 }
 
 export default async function HomePage() {
-  console.log('🏠 [HomePage] Rendering');
   const [featuredProducts, categories] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
