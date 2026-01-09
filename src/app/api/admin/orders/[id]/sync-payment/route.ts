@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import connectDB from '@/lib/db/mongoose';
 import { Order } from '@/lib/db/models';
 import { withAdmin } from '@/lib/auth';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { successResponse, errorResponse, notFoundResponse, serverErrorResponse } from '@/lib/api-response';
 
 function mapStripeToPaymentStatus(piStatus: string) {
@@ -43,6 +43,7 @@ export const POST = withAdmin(async (request: NextRequest, { user, params }) => 
       return errorResponse('Order has no paymentIntentId', 400);
     }
 
+    const stripe = getStripe();
     const pi = await stripe.paymentIntents.retrieve(order.paymentIntentId);
     const mapped = mapStripeToPaymentStatus(pi.status);
 

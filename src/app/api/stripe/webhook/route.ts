@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import connectDB from '@/lib/db/mongoose';
 import { Order, Cart } from '@/lib/db/models';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     let event: Stripe.Event;
 
     try {
+        const stripe = getStripe();
         event = stripe.webhooks.constructEvent(
             body,
             signature,

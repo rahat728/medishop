@@ -29,7 +29,7 @@ export const PUT = withDelivery(async (request: NextRequest, { user }) => {
     const body = await request.json();
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) {
-      return validationErrorResponse(parsed.error.errors.map((e) => e.message));
+      return validationErrorResponse(parsed.error.issues.map((e) => e.message));
     }
 
     const { lat, lng, orderId } = parsed.data;
@@ -120,11 +120,11 @@ export const GET = withDelivery(async (request: NextRequest, { user }) => {
       },
       activeOrder: activeOrder
         ? {
-            id: activeOrder._id.toString(),
-            orderNumber: (activeOrder as any).orderNumber,
-            status: (activeOrder as any).status,
-            deliveryLocation: (activeOrder as any).deliveryLocation || null,
-          }
+          id: activeOrder._id.toString(),
+          orderNumber: (activeOrder as any).orderNumber,
+          status: (activeOrder as any).status,
+          deliveryLocation: (activeOrder as any).deliveryLocation || null,
+        }
         : null,
     });
   } catch (error) {

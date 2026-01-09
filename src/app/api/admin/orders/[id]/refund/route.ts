@@ -9,7 +9,7 @@ import {
   notFoundResponse,
   serverErrorResponse,
 } from '@/lib/api-response';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { restockOrderItems } from '@/lib/orders/restock';
 
 export const POST = withAdmin(async (request: NextRequest, { user, params }) => {
@@ -58,6 +58,7 @@ export const POST = withAdmin(async (request: NextRequest, { user, params }) => 
       refundParams.amount = Math.round(amount * 100); // cents
     }
 
+    const stripe = getStripe();
     const refund = await stripe.refunds.create(refundParams);
 
     // Update order

@@ -4,10 +4,10 @@
 
 export const config = {
   app: {
-    name: process.env.NEXT_PUBLIC_APP_NAME || 'MedDelivery',
+    name: process.env.NEXT_PUBLIC_APP_NAME || 'MedicineShop',
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
-  
+
   // Medicine categories (OTC only)
   categories: [
     'Pain Relief',
@@ -21,7 +21,7 @@ export const config = {
     'Oral Care',
     'Other',
   ] as const,
-  
+
   // Order status flow
   orderStatusFlow: {
     pending: ['confirmed', 'cancelled'],
@@ -32,7 +32,7 @@ export const config = {
     delivered: [],
     cancelled: [],
   } as const,
-  
+
   // Pagination defaults
   pagination: {
     defaultLimit: 10,

@@ -29,6 +29,23 @@ interface OrderDetailClientProps {
     order: any; // Order type is complex with populated fields
 }
 
+export function OrderStatusSelectWrapper({ orderId, currentStatus }: { orderId: string; currentStatus: OrderStatus }) {
+    const router = useRouter();
+    // Local state to show immediate update if needed, though router.refresh will eventually update props
+    // Assuming OrderStatusSelect handles its own loading state or optimistic update visualization 
+    // but we can just rely on router.refresh for now as it was in the original client
+    return (
+        <OrderStatusSelect
+            orderId={orderId}
+            currentStatus={currentStatus}
+            onStatusChange={() => {
+                router.refresh();
+                toast.success('Status updated');
+            }}
+        />
+    );
+}
+
 export function OrderDetailClient({ order }: OrderDetailClientProps) {
     const router = useRouter();
     const [currentStatus, setCurrentStatus] = useState<OrderStatus>(order.status);

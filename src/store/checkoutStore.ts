@@ -44,7 +44,7 @@ export const useCheckoutStore = create<CheckoutState>()(
             }),
         }),
         {
-            name: 'meddelivery-checkout',
+            name: 'medicineshop-checkout',
             storage: createJSONStorage(() => localStorage),
         }
     )

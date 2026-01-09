@@ -70,7 +70,7 @@ export function Navbar() {
                 <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">M</span>
                 </div>
-                <span className="font-bold text-xl text-gray-900">MedDelivery</span>
+                <span className="font-bold text-xl text-gray-900">MedicineShop</span>
               </Link>
             </div>
 
@@ -85,8 +85,8 @@ export function Navbar() {
                       key={link.href}
                       href={link.href}
                       className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname.startsWith(link.href)
-                          ? 'text-primary-600 bg-primary-50'
-                          : 'text-gray-600 hover:text-primary-500'
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-gray-600 hover:text-primary-500'
                         }`}
                     >
                       {link.label}
@@ -199,8 +199,8 @@ export function Navbar() {
                       key={link.href}
                       href={link.href}
                       className={`block px-3 py-2 rounded-md ${pathname.startsWith(link.href)
-                          ? 'text-primary-600 bg-primary-50'
-                          : 'text-gray-600 hover:bg-gray-50'
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-gray-600 hover:bg-gray-50'
                         }`}
                       onClick={() => setIsOpen(false)}
                     >

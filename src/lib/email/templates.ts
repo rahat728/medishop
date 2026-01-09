@@ -1,12 +1,12 @@
 
 export const emailTemplates = {
-    orderConfirmation: (order: any) => ({
-        subject: `Order Confirmation - ${order.orderNumber}`,
-        html: `
+  orderConfirmation: (order: any) => ({
+    subject: `Order Confirmation - ${order.orderNumber}`,
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f8fafc; padding: 40px 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1f2937; margin: 20px 0 0;">MedDelivery</h1>
+            <h1 style="color: #1f2937; margin: 20px 0 0;">MedicineShop</h1>
             <p style="color: #6b7280; margin: 0;">Order Confirmed</p>
           </div>
           
@@ -51,21 +51,21 @@ export const emailTemplates = {
         </div>
       </div>
     `,
-    }),
+  }),
 
-    orderDelivered: (order: any) => ({
-        subject: `Order Delivered - ${order.orderNumber}`,
-        html: `
+  orderDelivered: (order: any) => ({
+    subject: `Order Delivered - ${order.orderNumber}`,
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f0fdf4; padding: 40px 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1f2937; margin: 20px 0 0;">MedDelivery</h1>
+            <h1 style="color: #1f2937; margin: 20px 0 0;">MedicineShop</h1>
             <p style="color: #065f46; margin: 0;">Order Delivered</p>
           </div>
           
           <div style="text-align: center; margin-bottom: 30px;">
             <h2 style="color: #1f2937; margin: 0;">Your order has been delivered!</h2>
-            <p style="color: #6b7280; margin: 0;">Thank you for choosing MedDelivery.</p>
+            <p style="color: #6b7280; margin: 0;">Thank you for choosing MedicineShop.</p>
           </div>
           
           <div style="text-align: center;">
@@ -76,11 +76,11 @@ export const emailTemplates = {
         </div>
       </div>
     `,
-    }),
+  }),
 
-    orderCancelled: (order: any) => ({
-        subject: `Order Cancelled - ${order.orderNumber}`,
-        html: `
+  orderCancelled: (order: any) => ({
+    subject: `Order Cancelled - ${order.orderNumber}`,
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #fef2f2; padding: 40px 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
@@ -101,5 +101,5 @@ export const emailTemplates = {
         </div>
       </div>
     `,
-    }),
+  }),
 };

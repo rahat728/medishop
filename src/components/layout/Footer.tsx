@@ -14,7 +14,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">M</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">MedDelivery</span>
+              <span className="font-bold text-xl text-gray-900">MedicineShop</span>
             </div>
             <p className="text-gray-600 text-sm">
               Your trusted OTC medicine delivery service. Fast, reliable, and always there when you need us.
@@ -69,7 +69,7 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li>support@meddelivery.com</li>
+              <li>support@medicineshop.com</li>
               <li>+1 (555) 123-4567</li>
               <li>Mon - Sat: 8am - 10pm</li>
             </ul>
@@ -77,7 +77,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-100 mt-8 pt-8 text-center text-sm text-gray-600">
-          <p>© {new Date().getFullYear()} MedDelivery. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} MedicineShop. All rights reserved.</p>
         </div>
       </div>
     </footer>

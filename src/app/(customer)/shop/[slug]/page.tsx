@@ -79,16 +79,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-900 text-white">
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm mb-8 bg-gray-50 p-3 rounded-lg overflow-x-auto whitespace-nowrap">
-                <Link href="/shop" className="text-gray-500 hover:text-primary-600 transition-colors">
+            <nav className="flex items-center gap-2 text-sm mb-8 bg-gray-800 p-3 rounded-lg overflow-x-auto whitespace-nowrap">
+                <Link href="/shop" className="text-gray-300 hover:text-primary-200 transition-colors">
                     Shop
                 </Link>
                 <span className="text-gray-300">/</span>
                 <Link
                     href={`/shop?category=${encodeURIComponent(medicine.category)}`}
-                    className="text-gray-500 hover:text-primary-600 transition-colors"
+                    className="text-gray-300 hover:text-primary-200 transition-colors"
                 >
                     {medicine.category}
                 </Link>
@@ -117,12 +117,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     {/* Badges */}
                     <div className="absolute top-4 left-4 flex flex-col gap-2">
                         {discountPercentage > 0 && (
-                            <Badge variant="error" size="lg" className="shadow-lg">
+                            <Badge variant="error" className="shadow-lg text-lg px-3 py-1">
                                 -{discountPercentage}% OFF
                             </Badge>
                         )}
                         {medicine.isFeatured && (
-                            <Badge variant="warning" size="lg" className="shadow-lg">
+                            <Badge variant="warning" className="shadow-lg">
                                 <Star className="w-4 h-4 mr-1 fill-current" />
                                 Featured
                             </Badge>
@@ -141,16 +141,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         </Link>
                     </div>
 
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2 leading-tight">
+                    <h1 className="text-4xl font-bold text-white mb-2 leading-tight">
                         {medicine.name}
                     </h1>
 
-                    <p className="text-lg text-gray-500 mb-6">
+                    <p className="text-lg text-gray-300 mb-6">
                         Manufactured by <span className="text-gray-900 font-medium">{medicine.manufacturer}</span>
                     </p>
 
                     {/* Price Section */}
-                    <div className="mb-8 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="mb-8 p-6 bg-gray-800 rounded-2xl border border-gray-700 shadow-sm">
                         <div className="flex items-baseline gap-3 mb-4">
                             <span className="text-4xl font-bold text-gray-900">
                                 ${medicine.price.toFixed(2)}
@@ -215,8 +215,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Product Details Sections */}
-            <div className="mb-20">
-                <h2 className="text-2xl font-bold text-gray-900 mb-8 pb-2 border-b-2 border-primary-500 w-fit">
+            <div className="mb-20 text-white">
+                <h2 className="text-2xl font-bold text-white mb-8 pb-2 border-b-2 border-primary-500 w-fit">
                     Safety & Usage Information
                 </h2>
 
@@ -267,17 +267,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
                         {/* Warnings */}
                         {medicine.warnings?.length > 0 && (
-                            <Card className="border-none shadow-sm bg-red-50/30">
+                            <Card className="border-none shadow-sm bg-gray-800/30">
                                 <CardContent className="p-8">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <h3 className="text-xl font-bold text-gray-300 mb-6 flex items-center gap-3">
                                         <div className="w-2 h-8 bg-red-500 rounded-full" />
                                         Safety Warnings
                                     </h3>
                                     <div className="space-y-3">
                                         {medicine.warnings.map((warning: string, i: number) => (
-                                            <div key={i} className="flex items-start gap-4 bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                                            <div key={i} className="flex items-start gap-4 bg-gray-700 p-4 rounded-xl border border-red-100 shadow-sm">
                                                 <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                                                <p className="text-gray-700 text-sm font-medium">{warning}</p>
+                                                <p className="text-gray-300 text-sm font-medium">{warning}</p>
                                             </div>
                                         ))}
                                     </div>

@@ -37,7 +37,7 @@ export const PUT = withAdmin(async (request, { user, params }) => {
 
         if (!validationResult.success) {
             return validationErrorResponse(
-                validationResult.error.errors.map((e) => e.message)
+                validationResult.error.issues.map((e) => e.message)
             );
         }
 

@@ -1,5 +1,5 @@
 // =============================================================================
-// MedDelivery Core Types
+// MedicineShop Core Types
 // =============================================================================
 
 // User Roles
@@ -53,7 +53,7 @@ export interface CartItem {
 }
 
 // Order Status
-export type OrderStatus = 
+export type OrderStatus =
   | 'pending'
   | 'confirmed'
   | 'assigned'

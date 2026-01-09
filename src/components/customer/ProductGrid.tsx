@@ -72,7 +72,6 @@ export function ProductGrid({
                 <ProductCard
                     key={product._id}
                     product={product}
-                    onAddToCart={onAddToCart}
                 />
             ))}
         </div>

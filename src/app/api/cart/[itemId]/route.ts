@@ -17,9 +17,9 @@ interface Context {
     params: Promise<{ itemId: string }>;
 }
 
-export const PUT = withAuth(async (request, { user }, context: Context) => {
+export const PUT = withAuth(async (request, { user, params }: { user: any, params?: any }) => {
     try {
-        const { itemId } = await context.params;
+        const itemId = params?.itemId;
         await connectDB();
 
         const { quantity } = await request.json();
@@ -78,9 +78,9 @@ export const PUT = withAuth(async (request, { user }, context: Context) => {
 // DELETE /api/cart/[itemId] - Remove item from cart
 // =============================================================================
 
-export const DELETE = withAuth(async (request, { user }, context: Context) => {
+export const DELETE = withAuth(async (request, { user, params }: { user: any, params?: any }) => {
     try {
-        const { itemId } = await context.params;
+        const itemId = params?.itemId;
         await connectDB();
 
         if (!itemId || !mongoose.Types.ObjectId.isValid(itemId)) {

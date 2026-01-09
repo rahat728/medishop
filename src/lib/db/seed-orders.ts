@@ -143,7 +143,7 @@ async function seedOrders() {
         console.log(`Successfully seeded ${orders.length} orders!`);
 
         process.exit(0);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error seeding orders:', error.message);
         if (error.errors) {
             Object.keys(error.errors).forEach(key => {

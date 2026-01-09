@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     if (!queryResult.success) {
       return validationErrorResponse(
-        queryResult.error.errors.map((e) => e.message)
+        queryResult.error.issues.map((e) => e.message)
       );
     }
 
@@ -127,7 +127,7 @@ export const POST = withAdmin(async (request, { user }) => {
 
     if (!validationResult.success) {
       return validationErrorResponse(
-        validationResult.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`)
+        validationResult.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`)
       );
     }
 

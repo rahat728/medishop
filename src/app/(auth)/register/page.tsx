@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks';
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -54,7 +54,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -87,7 +87,7 @@ export default function RegisterPage() {
       }
 
       toast.success('Account created successfully!');
-      
+
       // Auto-login after registration
       await login(formData.email, formData.password);
     } catch (error: any) {
@@ -106,11 +106,11 @@ export default function RegisterPage() {
             <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-xl">M</span>
             </div>
-            <span className="font-bold text-2xl text-gray-900">MedDelivery</span>
+            <span className="font-bold text-2xl text-gray-900">MedicineShop</span>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Create an account</h2>
           <p className="mt-2 text-gray-600">
-            Join MedDelivery to get your OTC medicines delivered
+            Join MedicineShop to get your OTC medicines delivered
           </p>
         </div>
 

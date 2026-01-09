@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db/mongoose';
 import { User } from '@/lib/db/models';
 import { withAuth, withDelivery } from '@/lib/auth';
-import { successResponse, serverErrorResponse, notFoundResponse } from '@/lib/api-response';
+import { successResponse, forbiddenResponse, notFoundResponse, serverErrorResponse } from '@/lib/api-response';
 
 // =============================================================================
 // GET /api/drivers - Get current driver info
@@ -13,11 +13,11 @@ export const GET = withAuth(async (request, { user }) => {
     await connectDB();
 
     if (user.role !== 'delivery') {
-      return serverErrorResponse(new Error('Unauthorized'), 403);
+      return forbiddenResponse('Unauthorized');
     }
 
     const driver = await User.findById(user.id)
-      .select('name phone email isActive currentLocation')
+      .select('name phone email isActive lastLocation')
       .lean();
 
     if (!driver) {
@@ -31,7 +31,7 @@ export const GET = withAuth(async (request, { user }) => {
         phone: driver.phone,
         email: driver.email,
         isActive: driver.isActive,
-        currentLocation: driver.currentLocation,
+        lastLocation: driver.lastLocation,
       },
     });
   } catch (error) {

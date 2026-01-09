@@ -34,9 +34,9 @@ export default function TrackingPage() {
 
   const center =
     order?.deliveryLocation?.lat && order?.deliveryLocation?.lng
-      ? [order.deliveryLocation.lat, order.deliveryLocation.lng]
+      ? [order.deliveryLocation.lat, order.deliveryLocation.lng] as [number, number]
       : order?.deliveryAddress?.coordinates?.lat && order?.deliveryAddress?.coordinates?.lng
-        ? [order.deliveryAddress.coordinates.lat, order.deliveryAddress.coordinates.lng]
+        ? [order.deliveryAddress.coordinates.lat, order.deliveryAddress.coordinates.lng] as [number, number]
         : null;
 
   return (

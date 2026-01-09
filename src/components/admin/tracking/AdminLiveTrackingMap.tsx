@@ -26,7 +26,7 @@ export function AdminLiveTrackingMap({
 }) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const { isLoaded } = useJsApiLoader({
-    id: 'meddelivery-admin-tracking',
+    id: 'medicineshop-admin-tracking',
     googleMapsApiKey: apiKey,
   });
 

@@ -10,11 +10,11 @@ export interface IMedicine extends Document {
   slug: string;
   description: string;
   price: number;
-  compareAtPrice?: number; // For showing discounts
+  compareAtPrice?: number | null; // For showing discounts
   category: string;
   stock: number;
   lowStockThreshold: number;
-  image?: string;
+  image?: string | null;
   images?: string[];
   manufacturer: string;
   activeIngredients?: string[];

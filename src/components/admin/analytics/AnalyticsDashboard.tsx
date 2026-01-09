@@ -116,32 +116,28 @@ export function AnalyticsDashboard() {
         <StatsCard
           title="Total Orders"
           value={loading ? '—' : (data?.summary.totalOrders ?? 0)}
-          icon={ShoppingBag}
-          iconColor="text-blue-600"
+          icon={<ShoppingBag className="w-6 h-6 text-blue-600" />}
           iconBgColor="bg-blue-100"
           loading={loading}
         />
         <StatsCard
           title="Revenue"
           value={loading ? '—' : `$${(data?.summary.totalRevenue ?? 0).toLocaleString()}`}
-          icon={DollarSign}
-          iconColor="text-green-600"
+          icon={<DollarSign className="w-6 h-6 text-green-600" />}
           iconBgColor="bg-green-100"
           loading={loading}
         />
         <StatsCard
           title="Avg Order"
           value={loading ? '—' : `$${Math.round(data?.summary.avgOrderValue ?? 0).toLocaleString()}`}
-          icon={Percent}
-          iconColor="text-purple-600"
+          icon={<Percent className="w-6 h-6 text-purple-600" />}
           iconBgColor="bg-purple-100"
           loading={loading}
         />
         <StatsCard
           title="Delivered"
           value={loading ? '—' : (data?.summary.deliveredOrders ?? 0)}
-          icon={BarChart3}
-          iconColor="text-cyan-600"
+          icon={<BarChart3 className="w-6 h-6 text-cyan-600" />}
           iconBgColor="bg-cyan-100"
           loading={loading}
         />

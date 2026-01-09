@@ -30,11 +30,11 @@ export const PUT = withDelivery(async (request, { user, params }) => {
     const driver = await User.findByIdAndUpdate(
       id,
       {
-        currentLocation: {
-          type: 'Point',
-          coordinates: [longitude, latitude],
+        lastLocation: {
+          lat: latitude,
+          lng: longitude,
+          updatedAt: new Date(),
         },
-        lastLocationUpdate: new Date(),
       },
       { new: true }
     );
@@ -57,7 +57,7 @@ export const PUT = withDelivery(async (request, { user, params }) => {
 
     return successResponse({
       message: 'Location updated',
-      location: driver.currentLocation,
+      location: driver.lastLocation,
     });
   } catch (error) {
     return serverErrorResponse(error);

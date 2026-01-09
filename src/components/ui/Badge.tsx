@@ -6,14 +6,22 @@ import type { OrderStatus, PaymentStatus } from '@/types';
 interface BadgeProps {
   children: React.ReactNode;
   variant?: 'default' | 'success' | 'warning' | 'error' | 'info' | 'purple' | 'orange' | 'cyan';
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 export function Badge({
   children,
   variant = 'default',
+  size = 'md',
   className = ''
 }: BadgeProps) {
+  const sizes = {
+    sm: 'px-2 py-0.5 text-[10px]',
+    md: 'px-2.5 py-0.5 text-xs',
+    lg: 'px-3 py-1 text-sm',
+  };
+
   const variants = {
     default: 'bg-gray-100 text-gray-800',
     success: 'bg-green-100 text-green-800',
@@ -27,8 +35,9 @@ export function Badge({
 
   return (
     <span className={`
-      inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+      inline-flex items-center rounded-full font-medium
       ${variants[variant]}
+      ${sizes[size]}
       ${className}
     `}>
       {children}
@@ -47,12 +56,12 @@ const orderStatusConfig: Record<OrderStatus, { label: string; variant: BadgeProp
   cancelled: { label: 'Cancelled', variant: 'error' },
 };
 
-export function OrderStatusBadge({ status }: { status: OrderStatus }) {
+export function OrderStatusBadge({ status, size = 'md' }: { status: OrderStatus; size?: BadgeProps['size'] }) {
   const config = orderStatusConfig[status];
   if (!config) {
-    return <Badge variant="default">{status}</Badge>;
+    return <Badge variant="default" size={size}>{status}</Badge>;
   }
-  return <Badge variant={config.variant}>{config.label}</Badge>;
+  return <Badge variant={config.variant} size={size}>{config.label}</Badge>;
 }
 
 // Payment Status Badge
@@ -63,7 +72,7 @@ const paymentStatusConfig: Record<PaymentStatus, { label: string; variant: Badge
   refunded: { label: 'Refunded', variant: 'info' },
 };
 
-export function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
+export function PaymentStatusBadge({ status, size = 'md' }: { status: PaymentStatus; size?: BadgeProps['size'] }) {
   const config = paymentStatusConfig[status];
-  return <Badge variant={config.variant}>{config.label}</Badge>;
+  return <Badge variant={config.variant} size={size}>{config.label}</Badge>;
 }

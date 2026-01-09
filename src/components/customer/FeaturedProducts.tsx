@@ -86,7 +86,6 @@ export function FeaturedProducts({ onAddToCart }: FeaturedProductsProps) {
                     <ProductCard
                         key={product._id}
                         product={product}
-                        onAddToCart={onAddToCart}
                     />
                 ))}
             </div>

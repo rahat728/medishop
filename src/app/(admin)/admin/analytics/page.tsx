@@ -4,7 +4,7 @@ import { DashboardOverview } from '@/components/admin/DashboardOverview';
 import { AdminHeader } from '@/components/layout';
 
 export const metadata: Metadata = {
-    title: 'Detailed Analytics | MedDelivery Admin',
+    title: 'Detailed Analytics | MedicineShop Admin',
     description: 'Deep dive into business metrics',
 };
 

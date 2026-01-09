@@ -10,7 +10,7 @@ import { User, Medicine } from './models';
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@meddelivery.com',
+    email: 'admin@medicineshop.com',
     password: 'admin123',
     role: 'admin',
     phone: '+1234567890',
@@ -82,7 +82,7 @@ const medicines = [
     manufacturer: 'MediCare',
     activeIngredients: ['Aspirin 325mg'],
   },
-  
+
   // Cold & Flu
   {
     name: 'DayQuil Cold & Flu',
@@ -112,7 +112,7 @@ const medicines = [
     stock: 250,
     manufacturer: 'NatureCare',
   },
-  
+
   // Digestive Health
   {
     name: 'Antacid Tablets',
@@ -141,7 +141,7 @@ const medicines = [
     stock: 90,
     manufacturer: 'DigestWell',
   },
-  
+
   // Allergy
   {
     name: 'Loratadine 10mg',
@@ -162,7 +162,7 @@ const medicines = [
     manufacturer: 'AllerFree',
     warnings: ['May cause drowsiness'],
   },
-  
+
   // First Aid
   {
     name: 'Adhesive Bandages Variety Pack',
@@ -189,7 +189,7 @@ const medicines = [
     stock: 180,
     manufacturer: 'CleanMed',
   },
-  
+
   // Vitamins & Supplements
   {
     name: 'Vitamin D3 1000 IU',
@@ -217,7 +217,7 @@ const medicines = [
     stock: 160,
     manufacturer: 'VitaLife',
   },
-  
+
   // Skin Care
   {
     name: 'Hydrocortisone Cream 1%',
@@ -235,7 +235,7 @@ const medicines = [
     stock: 130,
     manufacturer: 'NatureCare',
   },
-  
+
   // Eye Care
   {
     name: 'Lubricating Eye Drops',
@@ -245,7 +245,7 @@ const medicines = [
     stock: 95,
     manufacturer: 'VisionCare',
   },
-  
+
   // Oral Care
   {
     name: 'Antiseptic Mouthwash',
@@ -264,16 +264,16 @@ const medicines = [
 async function seed() {
   try {
     console.log('🌱 Starting database seed...\n');
-    
+
     await connectDB();
     console.log('📦 Connected to MongoDB\n');
-    
+
     // Clear existing data
     console.log('🗑️  Clearing existing data...');
     await User.deleteMany({});
     await Medicine.deleteMany({});
     console.log('✅ Existing data cleared\n');
-    
+
     // Seed users
     console.log('👥 Seeding users...');
     const createdUsers = [];
@@ -283,7 +283,7 @@ async function seed() {
       console.log(`   ✅ Created ${userData.role}: ${userData.email}`);
     }
     console.log('');
-    
+
     // Seed medicines
     console.log('💊 Seeding medicines...');
     for (const medicineData of medicines) {
@@ -291,7 +291,7 @@ async function seed() {
       console.log(`   ✅ Created: ${medicineData.name}`);
     }
     console.log('');
-    
+
     // Summary
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('🎉 Seed completed successfully!\n');
@@ -300,11 +300,11 @@ async function seed() {
     console.log(`   • Medicines: ${medicines.length}`);
     console.log('');
     console.log('🔐 Test Accounts:');
-    console.log('   Admin:    admin@meddelivery.com / admin123');
+    console.log('   Admin:    admin@medicineshop.com / admin123');
     console.log('   Customer: customer@test.com / customer123');
     console.log('   Delivery: delivery@test.com / delivery123');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    
+
   } catch (error) {
     console.error('❌ Seed error:', error);
     throw error;

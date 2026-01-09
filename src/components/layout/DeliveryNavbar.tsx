@@ -46,7 +46,7 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
                   <span className="text-white font-bold text-lg">M</span>
                 </div>
                 <div>
-                  <span className="font-bold text-lg text-gray-900">MedDelivery</span>
+                  <span className="font-bold text-lg text-gray-900">MedicineShop</span>
                   <span className="hidden sm:block text-xs text-gray-500">Delivery Partner</span>
                 </div>
               </Link>
@@ -57,23 +57,22 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname.startsWith(item.href);
-                
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
                         ? 'bg-primary-50 text-primary-600'
                         : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     {item.label}
                   </Link>
                 );
               })}
-              
+
               {/* User Menu */}
               <div className="relative ml-4 pl-4 border-l border-gray-200">
                 <button
@@ -85,10 +84,10 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
                   </div>
                   <span>{user.name}</span>
                 </button>
-                
+
                 {showMenu && (
                   <>
-                    <div 
+                    <div
                       className="fixed inset-0 z-10"
                       onClick={() => setShowMenu(false)}
                     />
@@ -140,17 +139,16 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname.startsWith(item.href);
-                
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setShowMenu(false)}
-                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium ${
-                      isActive
+                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium ${isActive
                         ? 'bg-primary-50 text-primary-600'
                         : 'text-gray-600'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-5 h-5" />
                     {item.label}
@@ -180,14 +178,13 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname.startsWith(item.href);
-            
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center py-3 px-4 text-xs font-medium ${
-                  isActive ? 'text-primary-600' : 'text-gray-500'
-                }`}
+                className={`flex flex-col items-center py-3 px-4 text-xs font-medium ${isActive ? 'text-primary-600' : 'text-gray-500'
+                  }`}
               >
                 <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary-600' : 'text-gray-400'}`} />
                 {item.label}

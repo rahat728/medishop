@@ -122,14 +122,22 @@ export function DataTable<T extends Record<string, any>>({
             : <ArrowDown className="w-4 h-4 text-primary-600" />;
     };
 
-    const renderCell = (column: Column<T>, row: T, index: number) => {
+    const renderCell = (column: Column<T>, row: T, index: number): React.ReactNode => {
         const value = column.key.split('.').reduce((obj, key) => obj?.[key], row);
 
         if (column.render) {
             return column.render(value, row, index);
         }
 
-        return value ?? '-';
+        if (value === null || value === undefined) {
+            return '-';
+        }
+
+        if (typeof value === 'object') {
+            return JSON.stringify(value);
+        }
+
+        return String(value);
     };
 
     // Loading skeleton
@@ -187,8 +195,8 @@ export function DataTable<T extends Record<string, any>>({
                     <button
                         onClick={() => setShowFilters(!showFilters)}
                         className={`p-2 rounded-lg border transition-colors ${showFilters
-                                ? 'bg-primary-50 border-primary-200 text-primary-600'
-                                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                            ? 'bg-primary-50 border-primary-200 text-primary-600'
+                            : 'border-gray-200 text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         <Filter className="w-5 h-5" />

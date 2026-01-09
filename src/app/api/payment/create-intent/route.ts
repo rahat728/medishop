@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { withAuth } from '@/lib/auth';
 import connectDB from '@/lib/db/mongoose';
 import { Cart, Medicine, Order } from '@/lib/db/models';
@@ -104,6 +104,7 @@ export const POST = withAuth(async (request, { user }) => {
         const amountInCents = Math.round(totalAmount * 100);
 
         // 2. Create Payment Intent
+        const stripe = getStripe();
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amountInCents,
             currency: 'usd',
