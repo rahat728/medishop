@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { authOptions } from './options';
 
 // =============================================================================
@@ -11,7 +12,9 @@ import { authOptions } from './options';
  */
 export async function getSession() {
   const session = await getServerSession(authOptions);
-  console.log('🔍 [getSession] Session:', session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
+  const headersList = await headers();
+  const path = headersList.get('x-invoke-path') || headersList.get('referer') || 'unknown';
+  console.log(`🔍 [getSession] Path: ${path} | Session:`, session ? `Found (${session.user?.email}, role: ${session.user?.role})` : 'NULL');
   return session;
 }
 
