@@ -82,10 +82,14 @@ export async function middleware(request: NextRequest) {
 
   // Get the token
   let token = null;
+  const cookieNames = request.cookies.getAll().map(c => c.name);
+  console.log(`🌐 [Middleware] Path: ${pathname} | Cookies found: [${cookieNames.join(', ')}]`);
+
   try {
     token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
+      secureCookie: process.env.NODE_ENV === 'production' || pathname.startsWith('https') || request.headers.get('x-forwarded-proto') === 'https',
     });
     if (!process.env.NEXTAUTH_SECRET) {
       console.warn('⚠️ [Middleware] NEXTAUTH_SECRET is not defined!');
