@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Truck,
   Shield,
@@ -135,9 +136,15 @@ export default async function HomePage() {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-500 rounded-full blur-[100px] opacity-20"></div>
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary-400 to-primary-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-12 shadow-2xl">
-                  <Package className="w-48 h-48 text-white drop-shadow-2xl" />
-                  <div className="mt-8 text-center">
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden shadow-2xl">
+                  <Image
+                    src="/images/hero-medicine.png"
+                    alt="Medicine Delivery"
+                    width={400}
+                    height={400}
+                    className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8">
                     <p className="text-white text-2xl font-bold">Freshly Packed</p>
                     <p className="text-primary-200 text-sm mt-1 uppercase tracking-widest font-medium">Coming to you soon</p>
                   </div>
