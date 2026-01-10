@@ -118,7 +118,7 @@ export default async function HomePage() {
               </p>
               <div className="mt-10 flex flex-wrap gap-5">
                 <Link href="/shop">
-                  <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 px-10 h-14 text-lg font-bold shadow-xl">
+                  <Button variant="white" size="lg" className="px-10 h-14 text-lg font-bold shadow-xl">
                     Shop Now
                     <ArrowRight className="w-6 h-6 ml-2" />
                   </Button>
@@ -284,7 +284,7 @@ export default async function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link href="/register">
-                  <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 px-12 h-16 text-xl font-bold shadow-xl sm:w-auto w-full">
+                  <Button variant="white" size="lg" className="px-12 h-16 text-xl font-bold shadow-xl sm:w-auto w-full">
                     Create Account
                     <ArrowRight className="w-6 h-6 ml-2" />
                   </Button>
