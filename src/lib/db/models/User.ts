@@ -10,6 +10,7 @@ export interface IAddress {
   city: string;
   state: string;
   zipCode: string;
+  wardNo?: string;
   coordinates?: {
     lat: number;
     lng: number;
@@ -47,6 +48,7 @@ const AddressSchema = new Schema<IAddress>(
     city: { type: String, required: true },
     state: { type: String, required: true },
     zipCode: { type: String, required: true },
+    wardNo: { type: String },
     coordinates: {
       lat: { type: Number },
       lng: { type: Number },

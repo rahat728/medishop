@@ -36,6 +36,7 @@ export function OrderReview() {
                         city: shippingAddress?.city,
                         state: shippingAddress?.state,
                         zipCode: shippingAddress?.zipCode,
+                        wardNo: shippingAddress?.wardNo,
                     },
                     paymentMethod: 'cod',
                     totalAmount: total,
@@ -106,6 +107,7 @@ export function OrderReview() {
                         <p>
                             {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zipCode}
                         </p>
+                        {shippingAddress.wardNo && <p className="text-primary-600 font-medium">Ward No: {shippingAddress.wardNo}</p>}
                         <p className="mt-2 font-medium text-gray-500">{shippingAddress.phone}</p>
                     </div>
                     <button
@@ -173,7 +175,8 @@ export function OrderReview() {
                             apartment: shippingAddress.apartment,
                             firstName: shippingAddress.firstName,
                             lastName: shippingAddress.lastName,
-                            phone: shippingAddress.phone
+                            phone: shippingAddress.phone,
+                            wardNo: shippingAddress.wardNo
                         }} />
                     </div>
                 ) : (

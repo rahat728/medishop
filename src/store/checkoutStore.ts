@@ -9,6 +9,7 @@ export interface ShippingAddress {
     city: string;
     state: string;
     zipCode: string;
+    wardNo?: string;
     phone: string;
 }
 
@@ -39,7 +40,17 @@ export const useCheckoutStore = create<CheckoutState>()(
 
             resetCheckout: () => set({
                 step: 1,
-                shippingAddress: null,
+                shippingAddress: {
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    apartment: '',
+                    city: '',
+                    state: '',
+                    zipCode: '',
+                    wardNo: '',
+                    phone: '',
+                },
                 paymentMethod: 'card',
             }),
         }),

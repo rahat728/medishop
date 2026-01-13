@@ -16,6 +16,7 @@ const shippingSchema = z.object({
     city: z.string().min(2, 'City is required'),
     state: z.string().min(2, 'State is required'),
     zipCode: z.string().min(5, 'Valid ZIP code is required'),
+    wardNo: z.string().optional(),
     phone: z.string().min(10, 'Valid phone number is required'),
 });
 
@@ -39,6 +40,7 @@ export function ShippingForm() {
             city: '',
             state: '',
             zipCode: '',
+            wardNo: '',
             phone: '',
         },
     });
@@ -117,13 +119,21 @@ export function ShippingForm() {
                     />
                 </div>
 
-                <Input
-                    label="Phone Number"
-                    type="tel"
-                    placeholder="(555) 000-0000"
-                    {...register('phone')}
-                    error={errors.phone?.message}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input
+                        label="Ward Number (optional)"
+                        placeholder="Ward 05"
+                        {...register('wardNo')}
+                        error={errors.wardNo?.message}
+                    />
+                    <Input
+                        label="Phone Number"
+                        type="tel"
+                        placeholder="(555) 000-0000"
+                        {...register('phone')}
+                        error={errors.phone?.message}
+                    />
+                </div>
 
                 <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                     <p className="text-xs text-gray-500">

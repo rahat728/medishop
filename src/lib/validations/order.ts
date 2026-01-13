@@ -152,6 +152,7 @@ export const createOrderSchema = z.object({
         city: z.string().min(2, 'City is required'),
         state: z.string().min(2, 'State is required'),
         zipCode: z.string().min(5, 'ZIP code is required'),
+        wardNo: z.string().optional(),
     }),
     paymentMethod: z.enum(['stripe', 'cod']),
     notes: z.string().max(1000).optional(),
