@@ -6,7 +6,7 @@ export const emailTemplates = {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f8fafc; padding: 40px 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1f2937; margin: 20px 0 0;">MedicineShop</h1>
+            <h1 style="color: #1f2937; margin: 20px 0 0;">Medishop</h1>
             <p style="color: #6b7280; margin: 0;">Order Confirmed</p>
           </div>
           
@@ -59,13 +59,13 @@ export const emailTemplates = {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f0fdf4; padding: 40px 20px; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1f2937; margin: 20px 0 0;">MedicineShop</h1>
+            <h1 style="color: #1f2937; margin: 20px 0 0;">Medishop</h1>
             <p style="color: #065f46; margin: 0;">Order Delivered</p>
           </div>
           
           <div style="text-align: center; margin-bottom: 30px;">
             <h2 style="color: #1f2937; margin: 0;">Your order has been delivered!</h2>
-            <p style="color: #6b7280; margin: 0;">Thank you for choosing MedicineShop.</p>
+            <p style="color: #6b7280; margin: 0;">Thank you for choosing Medishop.</p>
           </div>
           
           <div style="text-align: center;">

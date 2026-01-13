@@ -13,7 +13,7 @@ export function GoogleTrackingMap({
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   const { isLoaded } = useJsApiLoader({
-    id: 'medicineshop-google-maps',
+    id: 'medishop-google-maps',
     googleMapsApiKey: apiKey,
   });
 

@@ -10,7 +10,7 @@ import { User, Medicine } from './models';
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@medicineshop.com',
+    email: 'admin@medishop.com',
     password: 'admin123',
     role: 'admin',
     phone: '+1234567890',
@@ -300,7 +300,7 @@ async function seed() {
     console.log(`   • Medicines: ${medicines.length}`);
     console.log('');
     console.log('🔐 Test Accounts:');
-    console.log('   Admin:    admin@medicineshop.com / admin123');
+    console.log('   Admin:    admin@medishop.com / admin123');
     console.log('   Customer: customer@test.com / customer123');
     console.log('   Delivery: delivery@test.com / delivery123');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');

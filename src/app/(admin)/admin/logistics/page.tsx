@@ -4,7 +4,7 @@ import { AdminHeader } from '@/components/layout';
 import { LogisticsList } from './LogisticsList';
 
 export const metadata: Metadata = {
-    title: 'Logistics Management | MedicineShop Admin',
+    title: 'Logistics Management | Medishop Admin',
     description: 'Track and manage active deliveries',
 };
 

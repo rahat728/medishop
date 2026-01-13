@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { OrderList } from '@/components/admin/orders';
 
 export const metadata: Metadata = {
-    title: 'Orders | MedicineShop Admin',
+    title: 'Orders | Medishop Admin',
     description: 'Manage orders',
 };
 

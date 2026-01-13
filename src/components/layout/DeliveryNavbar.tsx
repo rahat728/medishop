@@ -46,7 +46,7 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
                   <span className="text-white font-bold text-lg">M</span>
                 </div>
                 <div>
-                  <span className="font-bold text-lg text-gray-900">MedicineShop</span>
+                  <span className="font-bold text-lg text-gray-900">Medishop</span>
                   <span className="hidden sm:block text-xs text-gray-500">Delivery Partner</span>
                 </div>
               </Link>

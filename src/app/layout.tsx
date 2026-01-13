@@ -7,7 +7,7 @@ import './globals.css';
 // const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MedicineShop - OTC Medicine Delivery',
+  title: 'Medishop - OTC Medicine Delivery',
   description: 'Fast and reliable OTC medicine delivery service with live tracking',
 };
 

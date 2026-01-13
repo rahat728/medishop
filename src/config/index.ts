@@ -4,7 +4,7 @@
 
 export const config = {
   app: {
-    name: process.env.NEXT_PUBLIC_APP_NAME || 'MedicineShop',
+    name: process.env.NEXT_PUBLIC_APP_NAME || 'Medishop',
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
 

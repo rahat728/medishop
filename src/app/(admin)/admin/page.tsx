@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { DashboardOverview } from '@/components/admin/DashboardOverview';
 
 export const metadata: Metadata = {
-    title: 'Dashboard | MedicineShop Admin',
+    title: 'Dashboard | Medishop Admin',
     description: 'Overview of business performance',
 };
 

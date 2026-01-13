@@ -106,11 +106,11 @@ export default function RegisterPage() {
             <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-xl">M</span>
             </div>
-            <span className="font-bold text-2xl text-gray-900">MedicineShop</span>
+            <span className="font-bold text-2xl text-gray-900">Medishop</span>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Create an account</h2>
           <p className="mt-2 text-gray-600">
-            Join MedicineShop to get your OTC medicines delivered
+            Join Medishop to get your OTC medicines delivered
           </p>
         </div>
 

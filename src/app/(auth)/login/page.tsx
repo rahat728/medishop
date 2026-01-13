@@ -55,7 +55,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-xl">M</span>
             </div>
-            <span className="font-bold text-2xl text-gray-900">MedicineShop</span>
+            <span className="font-bold text-2xl text-gray-900">Medishop</span>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
           <p className="mt-2 text-gray-600">
@@ -170,7 +170,7 @@ export default function LoginPage() {
         <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
           <p className="text-sm font-medium text-blue-800 mb-2">Demo Accounts:</p>
           <div className="space-y-1 text-sm text-blue-700">
-            <p><span className="font-medium">Admin:</span> admin@medicineshop.com / admin123</p>
+            <p><span className="font-medium">Admin:</span> admin@medishop.com / admin123</p>
             <p><span className="font-medium">Customer:</span> customer@test.com / customer123</p>
             <p><span className="font-medium">Delivery:</span> delivery@test.com / delivery123</p>
           </div>

@@ -58,7 +58,7 @@ export function AdminSidebar() {
           </div>
           {!isCollapsed && (
             <div className="overflow-hidden">
-              <span className="font-bold text-lg text-gray-900 block">MedicineShop</span>
+              <span className="font-bold text-lg text-gray-900 block">Medishop</span>
               <span className="text-xs text-gray-500">Admin Panel</span>
             </div>
           )}

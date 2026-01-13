@@ -160,7 +160,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
-              Why Choose MedicineShop?
+              Why Choose Medishop?
             </h2>
             <div className="w-20 h-1.5 bg-primary-500 mx-auto mt-4 rounded-full"></div>
             <p className="mt-6 text-xl text-gray-600 max-w-2xl mx-auto">
@@ -284,7 +284,7 @@ export default async function HomePage() {
 
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-8">
-                Get Started with MedicineShop
+                Get Started with Medishop
               </h2>
               <p className="text-2xl text-primary-100 mb-12 max-w-2xl mx-auto leading-relaxed">
                 Join thousands of happy customers and get your first delivery with <span className="text-white font-bold underline">FREE shipping</span>!
