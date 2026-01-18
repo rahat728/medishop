@@ -48,7 +48,6 @@ async function getFeaturedProducts() {
       stock: { $gt: 0 },
     })
       .select('name slug description price compareAtPrice category image manufacturer stock isFeatured')
-      .limit(4)
       .lean();
 
     return JSON.parse(JSON.stringify(products));
