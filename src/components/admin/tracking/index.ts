@@ -1,3 +1,3 @@
-export { AdminLiveTrackingMap } from './AdminLiveTrackingMap';
-export type { AdminTrackedOrder } from './AdminLiveTrackingMap';
+export { AdminMapcnTrackingMap } from './AdminMapcnTrackingMap';
+export type { AdminTrackedOrder } from './AdminMapcnTrackingMap';
 export { TrackingSidebar } from './TrackingSidebar';

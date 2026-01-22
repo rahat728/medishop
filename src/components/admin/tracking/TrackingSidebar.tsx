@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Search, MapPin } from 'lucide-react';
 import { Badge, Card, CardContent, Input } from '@/components/ui';
-import type { AdminTrackedOrder } from './AdminLiveTrackingMap';
+import type { AdminTrackedOrder } from './AdminMapcnTrackingMap';
 
 export function TrackingSidebar({
   orders,

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { RefreshCw } from 'lucide-react';
 import { AdminHeader } from '@/components/layout';
 import { Button, Badge } from '@/components/ui';
-import { AdminLiveTrackingMap, TrackingSidebar, type AdminTrackedOrder } from '@/components/admin/tracking';
+import { AdminMapcnTrackingMap, TrackingSidebar, type AdminTrackedOrder } from '@/components/admin/tracking';
 
 type StatusFilter = 'all' | 'assigned' | 'picked_up' | 'on_the_way';
 
@@ -133,7 +133,7 @@ export default function AdminTrackingPage() {
         </div>
 
         <div className="xl:col-span-2">
-          <AdminLiveTrackingMap
+          <AdminMapcnTrackingMap
             orders={filteredOrders}
             selectedOrderId={selectedOrderId}
             onSelectOrder={(id) => setSelectedOrderId(id)}

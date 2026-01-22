@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useOrderTracking } from '@/hooks/useOrderTracking';
-import { GoogleTrackingMap, TrackingPanel } from '@/components/customer/tracking';
+import { MapcnTrackingMap, TrackingPanel } from '@/components/customer/tracking';
 import { Card, CardContent, Spinner } from '@/components/ui';
 
 export function TrackingClient({ orderId }: { orderId: string }) {
@@ -32,7 +32,7 @@ export function TrackingClient({ orderId }: { orderId: string }) {
   return (
     <div className="space-y-6">
       <TrackingPanel data={data} />
-      <GoogleTrackingMap destination={destination} driver={driver} />
+      <MapcnTrackingMap destination={destination} driver={driver} />
     </div>
   );
 }

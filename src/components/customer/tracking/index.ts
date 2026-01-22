@@ -1,2 +1,2 @@
-export { GoogleTrackingMap } from './GoogleTrackingMap';
+export { MapcnTrackingMap } from './MapcnTrackingMap';
 export { TrackingPanel } from './TrackingPanel';
