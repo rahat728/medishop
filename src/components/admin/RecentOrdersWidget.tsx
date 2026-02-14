@@ -12,6 +12,10 @@ interface Order {
     customer: {
         name: string;
     };
+    deliveryAddress?: {
+        firstName?: string;
+        lastName?: string;
+    };
     totalAmount: number;
     status: OrderStatus;
     createdAt: string;
@@ -83,7 +87,9 @@ export function RecentOrdersWidget({ orders, loading }: RecentOrdersWidgetProps)
                                     {order.orderNumber}
                                 </p>
                                 <p className="text-xs text-gray-500 truncate">
-                                    {order.customer.name}
+                                    {order.deliveryAddress?.firstName
+                                        ? `${order.deliveryAddress.firstName} ${order.deliveryAddress.lastName}`
+                                        : order.customer.name}
                                 </p>
                             </div>
                             <div className="text-right">

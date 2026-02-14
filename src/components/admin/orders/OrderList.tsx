@@ -40,6 +40,11 @@ interface Order {
         _id: string;
         name: string;
     };
+    deliveryAddress?: {
+        firstName?: string;
+        lastName?: string;
+        wardNo?: string;
+    };
     createdAt: string;
 }
 
@@ -159,7 +164,11 @@ export function OrderList() {
                         <User className="w-4 h-4 text-gray-500" />
                     </div>
                     <div>
-                        <p className="text-sm font-medium text-gray-900">{order.customer?.name}</p>
+                        <p className="text-sm font-medium text-gray-900">
+                            {order.deliveryAddress?.firstName
+                                ? `${order.deliveryAddress.firstName} ${order.deliveryAddress.lastName}`
+                                : order.customer?.name}
+                        </p>
                         <p className="text-xs text-gray-500">{order.customer?.email}</p>
                     </div>
                 </div>

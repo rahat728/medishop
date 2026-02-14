@@ -32,6 +32,9 @@ export function OrderReview() {
                         quantity: item.quantity,
                     })),
                     shippingAddress: {
+                        firstName: shippingAddress?.firstName,
+                        lastName: shippingAddress?.lastName,
+                        phone: shippingAddress?.phone,
                         street: shippingAddress?.address,
                         city: shippingAddress?.city,
                         state: shippingAddress?.state,
@@ -40,13 +43,7 @@ export function OrderReview() {
                     },
                     paymentMethod: 'cod',
                     totalAmount: total,
-                    // Extra info for notification/display
-                    customerInfo: {
-                        firstName: shippingAddress?.firstName,
-                        lastName: shippingAddress?.lastName,
-                        phone: shippingAddress?.phone,
-                        apartment: shippingAddress?.apartment,
-                    }
+                    notes: '', // Add notes if available in store
                 }),
             });
 

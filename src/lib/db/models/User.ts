@@ -6,6 +6,9 @@ import bcrypt from 'bcryptjs';
 // =============================================================================
 
 export interface IAddress {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
   street: string;
   city: string;
   state: string;

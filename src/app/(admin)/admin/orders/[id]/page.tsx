@@ -156,18 +156,20 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="font-medium text-gray-900">{order.customer?.name}</p>
+                <p className="font-medium text-gray-900">
+                  {order.deliveryAddress?.firstName
+                    ? `${order.deliveryAddress.firstName} ${order.deliveryAddress.lastName}`
+                    : order.customer?.name}
+                </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Mail className="w-4 h-4" />
                 {order.customer?.email}
               </div>
-              {order.customer?.phone && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="w-4 h-4" />
-                  {order.customer.phone}
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Phone className="w-4 h-4" />
+                {order.deliveryAddress?.phone || order.customer?.phone || 'No phone'}
+              </div>
             </CardContent>
           </Card>
 
@@ -181,11 +183,14 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
             </CardHeader>
             <CardContent>
               <address className="not-italic text-sm text-gray-600 space-y-1">
+                <p className="font-medium text-primary-600 mb-1">Ward No: {order.deliveryAddress?.wardNo}</p>
                 <p>{order.deliveryAddress?.street}</p>
-                <p>
-                  {order.deliveryAddress?.city}, {order.deliveryAddress?.state}{' '}
-                  {order.deliveryAddress?.zipCode}
-                </p>
+                {order.deliveryAddress?.city && (
+                  <p>
+                    {order.deliveryAddress.city}, {order.deliveryAddress.state}{' '}
+                    {order.deliveryAddress.zipCode}
+                  </p>
+                )}
               </address>
               {order.deliveryNotes && (
                 <div className="mt-4 p-3 bg-yellow-50 rounded-lg">

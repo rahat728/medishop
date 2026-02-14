@@ -143,6 +143,9 @@ const StatusHistorySchema = new Schema<IStatusHistory>(
 
 const DeliveryAddressSchema = new Schema<IAddress>(
   {
+    firstName: { type: String },
+    lastName: { type: String },
+    phone: { type: String },
     street: { type: String },
     city: { type: String },
     state: { type: String },

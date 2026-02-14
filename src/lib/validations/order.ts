@@ -148,6 +148,9 @@ export const createOrderSchema = z.object({
         quantity: z.number().int().min(1, 'Quantity must be at least 1'),
     })).min(1, 'Order must have at least one item'),
     shippingAddress: z.object({
+        firstName: z.string().min(1, 'First name is required'),
+        lastName: z.string().min(1, 'Last name is required'),
+        phone: z.string().min(1, 'Phone number is required'),
         street: z.string().optional(),
         city: z.string().optional(),
         state: z.string().optional(),
