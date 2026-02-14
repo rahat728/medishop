@@ -11,12 +11,7 @@ import { ArrowRight, MapPin } from 'lucide-react';
 const shippingSchema = z.object({
     firstName: z.string().min(2, 'First name is required'),
     lastName: z.string().min(2, 'Last name is required'),
-    address: z.string().min(5, 'Address is required'),
-    apartment: z.string().optional(),
-    city: z.string().min(2, 'City is required'),
-    state: z.string().min(2, 'State is required'),
-    zipCode: z.string().min(5, 'Valid ZIP code is required'),
-    wardNo: z.string().optional(),
+    wardNo: z.string().min(1, 'Ward number is required'),
     phone: z.string().min(10, 'Valid phone number is required'),
 });
 
@@ -32,27 +27,36 @@ export function ShippingForm() {
         reset,
     } = useForm<ShippingFormData>({
         resolver: zodResolver(shippingSchema),
-        defaultValues: shippingAddress || {
-            firstName: '',
-            lastName: '',
-            address: '',
-            apartment: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            wardNo: '',
-            phone: '',
+        defaultValues: {
+            firstName: shippingAddress?.firstName || '',
+            lastName: shippingAddress?.lastName || '',
+            wardNo: shippingAddress?.wardNo || '',
+            phone: shippingAddress?.phone || '',
         },
     });
 
     useEffect(() => {
         if (shippingAddress) {
-            reset(shippingAddress);
+            reset({
+                firstName: shippingAddress.firstName || '',
+                lastName: shippingAddress.lastName || '',
+                wardNo: shippingAddress.wardNo || '',
+                phone: shippingAddress.phone || '',
+            });
         }
     }, [shippingAddress, reset]);
 
     const onSubmit = (data: ShippingFormData) => {
-        setShippingAddress(data);
+        // We still need to pass the structure expected by the store/backend, 
+        // effectively filling missing fields with empty strings if they are optional now.
+        setShippingAddress({
+            ...data,
+            address: '',
+            apartment: '',
+            city: '',
+            state: '',
+            zipCode: '',
+        });
         setStep(2);
     };
 
@@ -84,44 +88,9 @@ export function ShippingForm() {
                     />
                 </div>
 
-                <Input
-                    label="Street Address"
-                    placeholder="123 Health Ave"
-                    {...register('address')}
-                    error={errors.address?.message}
-                />
-
-                <Input
-                    label="Apartment, suite, etc. (optional)"
-                    placeholder="Apt 4B"
-                    {...register('apartment')}
-                    error={errors.apartment?.message}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Input
-                        label="City"
-                        placeholder="Metropolis"
-                        {...register('city')}
-                        error={errors.city?.message}
-                    />
-                    <Input
-                        label="State"
-                        placeholder="NY"
-                        {...register('state')}
-                        error={errors.state?.message}
-                    />
-                    <Input
-                        label="ZIP Code"
-                        placeholder="10001"
-                        {...register('zipCode')}
-                        error={errors.zipCode?.message}
-                    />
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
-                        label="Ward Number (optional)"
+                        label="Ward Number"
                         placeholder="Ward 05"
                         {...register('wardNo')}
                         error={errors.wardNo?.message}
@@ -137,7 +106,7 @@ export function ShippingForm() {
 
                 <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                     <p className="text-xs text-gray-500">
-                        * All fields except apartment are required.
+                        * All fields are required.
                     </p>
                     <Button type="submit" size="lg" className="px-8 shadow-lg shadow-primary-100" rightIcon={<ArrowRight className="w-4 h-4" />}>
                         Continue to Payment

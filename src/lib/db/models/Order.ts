@@ -143,10 +143,11 @@ const StatusHistorySchema = new Schema<IStatusHistory>(
 
 const DeliveryAddressSchema = new Schema<IAddress>(
   {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    zipCode: { type: String, required: true },
+    street: { type: String },
+    city: { type: String },
+    state: { type: String },
+    zipCode: { type: String },
+    wardNo: { type: String, required: true },
     coordinates: {
       lat: { type: Number },
       lng: { type: Number },

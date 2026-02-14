@@ -107,7 +107,7 @@ export const POST = withAuth(async (request, { user }) => {
         const stripe = getStripe();
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amountInCents,
-            currency: 'usd',
+            currency: 'bdt',
             automatic_payment_methods: {
                 enabled: true,
             },

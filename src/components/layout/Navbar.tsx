@@ -2,7 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { usePathname } from 'next/navigation';
+// ...
+// I need to be careful with the imports block. I will just replace the import line and the usage line separately or together if close.
+// Navbar.tsx has imports at top.
+// The usage is around line 70.
+// I'll do two replaces for Navbar to be safe and clean.
+// Replace 1: Import
+
 import {
   Menu,
   X,
@@ -64,13 +72,28 @@ export function Navbar() {
       <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
+            import Image from 'next/image';
+
+            // ... (existing imports, but Image needs to be added to top or assumed available if I can't see top. I will use replace for the whole header or just add import)
+            // Wait, I can't add import easily with block replace if it's far away.
+            // I will check if I can include the import in the block if it's nearby, or use a separate replacement.
+            // Navbar.tsx:
+            // 1: 'use client';
+            // 3: import React from ...
+            // 4: import Link ...
+            // I can add import Image from 'next/image'; after Link.
+
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">M</span>
-                </div>
-                <span className="font-bold text-xl text-gray-900">Medishop</span>
+                <NextImage
+                  src="/logo.png"
+                  alt="Medishop"
+                  width={150}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
               </Link>
             </div>
 

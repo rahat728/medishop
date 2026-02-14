@@ -194,7 +194,7 @@ export default async function AdminDashboardPage() {
         />
         <StatsCard
           title="Revenue"
-          value={`$${stats.totalRevenue.toLocaleString()}`}
+          value={`৳${stats.totalRevenue.toLocaleString()}`}
           icon={<DollarSign className="w-6 h-6 text-green-600" />}
           iconBgColor="bg-green-100"
         />

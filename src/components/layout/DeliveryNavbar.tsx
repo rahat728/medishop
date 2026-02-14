@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Package,
@@ -42,13 +43,14 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/my-orders" className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">M</span>
-                </div>
-                <div>
-                  <span className="font-bold text-lg text-gray-900">Medishop</span>
-                  <span className="hidden sm:block text-xs text-gray-500">Delivery Partner</span>
-                </div>
+                <NextImage
+                  src="/logo.png"
+                  alt="Medishop Delivery"
+                  width={140}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                />
+                <span className="hidden sm:block text-xs text-gray-500 mt-1">Delivery Partner</span>
               </Link>
             </div>
 
@@ -63,8 +65,8 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
                     key={item.href}
                     href={item.href}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-primary-50 text-primary-600'
+                      : 'text-gray-600 hover:bg-gray-50'
                       }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -146,8 +148,8 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
                     href={item.href}
                     onClick={() => setShowMenu(false)}
                     className={`flex items-center gap-3 px-4 py-3 text-sm font-medium ${isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600'
+                      ? 'bg-primary-50 text-primary-600'
+                      : 'text-gray-600'
                       }`}
                   >
                     <Icon className="w-5 h-5" />

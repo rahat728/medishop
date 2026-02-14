@@ -96,7 +96,7 @@ export function CartDrawer() {
                             {/* Subtotal */}
                             <div className="flex justify-between text-lg font-semibold">
                                 <span>Subtotal</span>
-                                <span>${subtotal.toFixed(2)}</span>
+                                <span>৳{subtotal.toFixed(2)}</span>
                             </div>
 
                             <p className="text-sm text-gray-500">

@@ -185,7 +185,7 @@ export function OrderList() {
             sortable: true,
             render: (value) => (
                 <span className="font-medium text-gray-900">
-                    ${value.toFixed(2)}
+                    ৳{value.toFixed(2)}
                 </span>
             ),
         },
@@ -259,7 +259,7 @@ export function OrderList() {
                 />
                 <StatsCard
                     title="Total Revenue"
-                    value={`$${stats.totalRevenue.toLocaleString()}`}
+                    value={`৳${stats.totalRevenue.toLocaleString()}`}
                     icon={<ShoppingBag className="w-6 h-6 text-green-600" />}
                     iconBgColor="bg-green-100"
                 />

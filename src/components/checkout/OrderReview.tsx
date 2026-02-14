@@ -102,13 +102,8 @@ export function OrderReview() {
                         <p className="font-bold text-gray-900 text-base mb-1">
                             {shippingAddress.firstName} {shippingAddress.lastName}
                         </p>
-                        <p>{shippingAddress.address}</p>
-                        {shippingAddress.apartment && <p>{shippingAddress.apartment}</p>}
-                        <p>
-                            {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zipCode}
-                        </p>
-                        {shippingAddress.wardNo && <p className="text-primary-600 font-medium">Ward No: {shippingAddress.wardNo}</p>}
-                        <p className="mt-2 font-medium text-gray-500">{shippingAddress.phone}</p>
+                        <p className="text-primary-600 font-medium">Ward No: {shippingAddress.wardNo}</p>
+                        <p className="mt-1 font-medium text-gray-500">{shippingAddress.phone}</p>
                     </div>
                     <button
                         onClick={() => setStep(1)}
@@ -168,11 +163,11 @@ export function OrderReview() {
                 {paymentMethod === 'card' ? (
                     <div className="max-w-lg mx-auto">
                         <PaymentWrapper shippingAddress={{
-                            street: shippingAddress.address,
-                            city: shippingAddress.city,
-                            state: shippingAddress.state,
-                            zipCode: shippingAddress.zipCode,
-                            apartment: shippingAddress.apartment,
+                            street: '',
+                            city: '',
+                            state: '',
+                            zipCode: '',
+                            apartment: '',
                             firstName: shippingAddress.firstName,
                             lastName: shippingAddress.lastName,
                             phone: shippingAddress.phone,
@@ -196,7 +191,7 @@ export function OrderReview() {
                             onClick={handlePlaceOrderCOD}
                             isLoading={isProcessing}
                         >
-                            Place Order & Pay ${total.toFixed(2)}
+                            Place Order & Pay ৳{total.toFixed(2)}
                         </Button>
                     </div>
                 )}

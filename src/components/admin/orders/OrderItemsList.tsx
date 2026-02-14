@@ -60,12 +60,12 @@ export function OrderItemsList({
                                 {item.name}
                             </Link>
                             <p className="text-sm text-gray-500">
-                                ${item.price.toFixed(2)} × {item.quantity}
+                                ৳{item.price.toFixed(2)} × {item.quantity}
                             </p>
                         </div>
                         <div className="text-right">
                             <p className="font-medium text-gray-900">
-                                ${item.subtotal.toFixed(2)}
+                                ৳{item.subtotal.toFixed(2)}
                             </p>
                         </div>
                     </div>
@@ -76,27 +76,27 @@ export function OrderItemsList({
             <div className="border-t border-gray-200 pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Subtotal</span>
-                    <span className="text-gray-900">${subtotal.toFixed(2)}</span>
+                    <span className="text-gray-900">৳{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Delivery Fee</span>
-                    <span className="text-gray-900">${deliveryFee.toFixed(2)}</span>
+                    <span className="text-gray-900">৳{deliveryFee.toFixed(2)}</span>
                 </div>
                 {tax > 0 && (
                     <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Tax</span>
-                        <span className="text-gray-900">${tax.toFixed(2)}</span>
+                        <span className="text-gray-900">৳{tax.toFixed(2)}</span>
                     </div>
                 )}
                 {discount > 0 && (
                     <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Discount</span>
-                        <span className="text-green-600">-${discount.toFixed(2)}</span>
+                        <span className="text-green-600">-৳{discount.toFixed(2)}</span>
                     </div>
                 )}
                 <div className="flex justify-between text-lg font-semibold border-t border-gray-200 pt-2">
                     <span className="text-gray-900">Total</span>
-                    <span className="text-gray-900">${total.toFixed(2)}</span>
+                    <span className="text-gray-900">৳{total.toFixed(2)}</span>
                 </div>
             </div>
         </div>

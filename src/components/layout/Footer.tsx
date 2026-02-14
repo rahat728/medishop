@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 
 export function Footer() {
   return (
@@ -11,10 +12,13 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-              <span className="font-bold text-xl text-gray-900">Medishop</span>
+              <NextImage
+                src="/logo.png"
+                alt="Medishop"
+                width={150}
+                height={40}
+                className="h-10 w-auto object-contain"
+              />
             </div>
             <p className="text-gray-600 text-sm">
               Your trusted OTC medicine delivery service. Fast, reliable, and always there when you need us.

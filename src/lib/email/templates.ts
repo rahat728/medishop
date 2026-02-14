@@ -20,7 +20,7 @@ export const emailTemplates = {
                 <p style="margin: 0 0 5px;"><strong>Order Number:</strong> ${order.orderNumber}</p>
                 <p style="margin: 0 0 5px;"><strong>Status:</strong> <span style="color: #10b981;">${order.status}</span></p>
                 <p style="margin: 0 0 5px;"><strong>Payment:</strong> <span style="color: #10b981;">${order.paymentStatus}</span></p>
-                <p style="margin: 0 0 5px;"><strong>Total:</strong> $${order.totalAmount.toFixed(2)}</p>
+                <p style="margin: 0 0 5px;"><strong>Total:</strong> ৳${order.totalAmount.toFixed(2)}</p>
                 <p style="margin: 0 0 5px;"><strong>Payment Method:</strong> ${order.paymentMethod}</p>
               </div>
             </div>
@@ -35,7 +35,7 @@ export const emailTemplates = {
                       <p style="margin: 0; color: #6b7280; font-size: 14px;">Qty: ${item.quantity}</p>
                     </div>
                     <div>
-                      <p style="margin: 0; color: #374151; font-weight: 600;">$${item.price.toFixed(2)}</p>
+                      <p style="margin: 0; color: #374151; font-weight: 600;">৳${item.price.toFixed(2)}</p>
                     </div>
                   </div>
                 `).join('')}

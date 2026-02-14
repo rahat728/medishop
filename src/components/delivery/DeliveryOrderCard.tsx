@@ -37,7 +37,7 @@ export function DeliveryOrderCard({ order }: DeliveryOrderCardProps) {
                                 <div>
                                     <p className="text-sm font-bold text-gray-900 leading-none">Delivery To</p>
                                     <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                                        {order.deliveryAddress.street}, {order.deliveryAddress.city}
+                                        Ward No: {order.deliveryAddress?.wardNo}
                                     </p>
                                 </div>
                             </div>

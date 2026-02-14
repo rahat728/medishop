@@ -153,11 +153,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <div className="mb-8 p-6 bg-gray-800 rounded-2xl border border-gray-700 shadow-sm">
                         <div className="flex items-baseline gap-3 mb-4">
                             <span className="text-4xl font-bold text-gray-900">
-                                ${medicine.price.toFixed(2)}
+                                ৳{medicine.price.toFixed(2)}
                             </span>
                             {medicine.compareAtPrice && medicine.compareAtPrice > medicine.price && (
                                 <span className="text-xl text-gray-400 line-through">
-                                    ${medicine.compareAtPrice.toFixed(2)}
+                                    ৳{medicine.compareAtPrice.toFixed(2)}
                                 </span>
                             )}
                         </div>

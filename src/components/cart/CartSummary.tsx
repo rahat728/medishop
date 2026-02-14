@@ -29,7 +29,7 @@ export function CartSummary({ showCheckoutButton = true }: CartSummaryProps) {
             <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
                     <span>Subtotal ({items.length} items)</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>৳{subtotal.toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between text-gray-600">
@@ -37,25 +37,25 @@ export function CartSummary({ showCheckoutButton = true }: CartSummaryProps) {
                     {deliveryFee === 0 ? (
                         <span className="text-green-600 font-medium">FREE</span>
                     ) : (
-                        <span>${deliveryFee.toFixed(2)}</span>
+                        <span>৳{deliveryFee.toFixed(2)}</span>
                     )}
                 </div>
 
                 <div className="flex justify-between text-gray-600">
                     <span>Estimated Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>৳{tax.toFixed(2)}</span>
                 </div>
 
                 {subtotal < 50 && (
                     <div className="bg-yellow-50 text-yellow-800 text-sm p-3 rounded-lg">
-                        Add ${(50 - subtotal).toFixed(2)} more for free delivery!
+                        Add ৳{(50 - subtotal).toFixed(2)} more for free delivery!
                     </div>
                 )}
 
                 <div className="border-t border-gray-100 pt-3">
                     <div className="flex justify-between text-lg font-semibold text-gray-900">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>৳{total.toFixed(2)}</span>
                     </div>
                 </div>
             </div>

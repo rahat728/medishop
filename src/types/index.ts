@@ -20,10 +20,11 @@ export interface User {
 
 // Address
 export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  wardNo?: string;
   coordinates?: {
     lat: number;
     lng: number;

@@ -125,8 +125,15 @@ export default async function DeliveryOrderDetailPage({ params }: { params: Prom
                                 <div>
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Delivery Address</p>
                                     <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                                        {order.deliveryAddress.street}<br />
-                                        {order.deliveryAddress.city}, {order.deliveryAddress.state} {order.deliveryAddress.zipCode}
+                                        Ward No: {order.deliveryAddress.wardNo}
+                                        {order.deliveryAddress.street && (
+                                            <>
+                                                <br />
+                                                <span className="text-xs text-gray-400 font-normal">
+                                                    (Legacy: {order.deliveryAddress.street}, {order.deliveryAddress.city})
+                                                </span>
+                                            </>
+                                        )}
                                     </p>
                                 </div>
                             </div>

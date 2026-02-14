@@ -87,7 +87,7 @@ export default async function CustomerOrdersPage() {
                       <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900">Delivery Address</p>
                         <p className="text-sm text-gray-600">
-                          {order.deliveryAddress?.street}, {order.deliveryAddress?.city}, {order.deliveryAddress?.state} {order.deliveryAddress?.zipCode}
+                          Ward No: {order.deliveryAddress?.wardNo}
                         </p>
                       </div>
                     </div>

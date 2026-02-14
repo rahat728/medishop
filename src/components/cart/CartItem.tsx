@@ -46,11 +46,11 @@ export function CartItem({ item, compact = false }: CartItemProps) {
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
                     <p className="text-sm text-gray-500">
-                        ${item.price.toFixed(2)} × {item.quantity}
+                        ৳{item.price.toFixed(2)} × {item.quantity}
                     </p>
                 </div>
                 <p className="text-sm font-medium text-gray-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ৳{(item.price * item.quantity).toFixed(2)}
                 </p>
             </div>
         );
@@ -88,11 +88,11 @@ export function CartItem({ item, compact = false }: CartItemProps) {
                 {/* Price */}
                 <div className="mt-2">
                     <span className="text-lg font-semibold text-gray-900">
-                        ${item.price.toFixed(2)}
+                        ৳{item.price.toFixed(2)}
                     </span>
                     {item.compareAtPrice && item.compareAtPrice > item.price && (
                         <span className="ml-2 text-sm text-gray-400 line-through">
-                            ${item.compareAtPrice.toFixed(2)}
+                            ৳{item.compareAtPrice.toFixed(2)}
                         </span>
                     )}
                 </div>
@@ -129,7 +129,7 @@ export function CartItem({ item, compact = false }: CartItemProps) {
 
                 {/* Subtotal */}
                 <p className="text-lg font-semibold text-gray-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ৳{(item.price * item.quantity).toFixed(2)}
                 </p>
 
                 {/* Remove Button */}

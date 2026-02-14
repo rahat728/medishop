@@ -51,7 +51,7 @@ export default function DeliveryActivePage() {
               </div>
 
               <div className="text-sm text-gray-700">
-                Deliver to: {activeOrder.deliveryAddress?.street}, {activeOrder.deliveryAddress?.city}
+                Deliver to: Ward No {activeOrder.deliveryAddress?.wardNo}
               </div>
 
               <div className="text-sm text-gray-600">
@@ -65,7 +65,9 @@ export default function DeliveryActivePage() {
                 <a
                   className="inline-flex"
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${activeOrder.deliveryAddress?.street}, ${activeOrder.deliveryAddress?.city}, ${activeOrder.deliveryAddress?.state} ${activeOrder.deliveryAddress?.zipCode}`
+                    activeOrder.deliveryAddress?.street
+                      ? `${activeOrder.deliveryAddress.street}, ${activeOrder.deliveryAddress.city}`
+                      : `Ward No ${activeOrder.deliveryAddress?.wardNo}, Khulna`
                   )}`}
                   target="_blank"
                   rel="noreferrer"

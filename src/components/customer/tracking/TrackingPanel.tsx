@@ -36,10 +36,12 @@ export function TrackingPanel({ data }: { data: OrderTrackingData }) {
             <div>
               <div className="text-sm font-medium text-gray-900">Destination</div>
               <div className="text-sm text-gray-600">
-                {data.deliveryAddress?.street || '—'}
-                <div className="text-xs text-gray-500">
-                  {data.deliveryAddress?.city || ''} {data.deliveryAddress?.state || ''} {data.deliveryAddress?.zipCode || ''}
-                </div>
+                Ward No: {data.deliveryAddress?.wardNo || '—'}
+                {data.deliveryAddress?.street && (
+                  <div className="text-xs text-gray-500">
+                    {data.deliveryAddress.street}, {data.deliveryAddress.city}
+                  </div>
+                )}
               </div>
             </div>
           </div>

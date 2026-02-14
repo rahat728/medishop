@@ -35,7 +35,7 @@ export function PriceFilter({ minPrice, maxPrice, onPriceChange }: PriceFilterPr
 
             <div className="flex items-center gap-3">
                 <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">৳</span>
                     <input
                         type="number"
                         min="0"
@@ -47,7 +47,7 @@ export function PriceFilter({ minPrice, maxPrice, onPriceChange }: PriceFilterPr
                 </div>
                 <span className="text-gray-400">-</span>
                 <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">৳</span>
                     <input
                         type="number"
                         min="0"

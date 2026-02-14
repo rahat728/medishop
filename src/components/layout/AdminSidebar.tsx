@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -53,13 +54,19 @@ export function AdminSidebar() {
     <div className="flex flex-col h-full">
       <div className={`p-4 border-b border-gray-100 ${isCollapsed ? 'px-2' : 'px-6'}`}>
         <Link href="/admin" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-xl">M</span>
-          </div>
-          {!isCollapsed && (
-            <div className="overflow-hidden">
-              <span className="font-bold text-lg text-gray-900 block">Medishop</span>
-              <span className="text-xs text-gray-500">Admin Panel</span>
+          {isCollapsed ? (
+            <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-xl">M</span>
+            </div>
+          ) : (
+            <div className="relative h-10 w-40">
+              <Image
+                src="/logo.png"
+                alt="Medishop Admin"
+                fill
+                className="object-contain object-left"
+                priority
+              />
             </div>
           )}
         </Link>
