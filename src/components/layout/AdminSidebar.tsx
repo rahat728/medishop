@@ -59,14 +59,19 @@ export function AdminSidebar() {
               <span className="text-white font-bold text-xl">M</span>
             </div>
           ) : (
-            <div className="relative h-10 w-40">
+            <div className="flex items-center gap-3">
               <NextImage
                 src="/logo.png"
                 alt="Medishop Admin"
-                fill
-                className="object-contain object-left"
+                width={160}
+                height={48}
+                className="h-12 w-auto object-contain"
                 priority
               />
+              <div className="overflow-hidden">
+                <span className="font-bold text-xl text-gray-900 block leading-tight">Medishop</span>
+                <span className="text-xs text-gray-500">Admin Panel</span>
+              </div>
             </div>
           )}
         </Link>

@@ -11,14 +11,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-3 mb-4">
               <NextImage
                 src="/logo.png"
                 alt="Medishop"
-                width={150}
-                height={40}
-                className="h-10 w-auto object-contain"
+                width={180}
+                height={50}
+                className="h-12 w-auto object-contain"
               />
+              <span className="font-bold text-2xl text-gray-900">Medishop</span>
             </div>
             <p className="text-gray-600 text-sm">
               Your trusted OTC medicine delivery service. Fast, reliable, and always there when you need us.

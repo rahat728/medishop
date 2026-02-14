@@ -45,12 +45,15 @@ export function DeliveryNavbar({ user }: DeliveryNavbarProps) {
               <Link href="/my-orders" className="flex items-center gap-2">
                 <NextImage
                   src="/logo.png"
-                  alt="Medishop Delivery"
-                  width={140}
-                  height={40}
-                  className="h-10 w-auto object-contain"
+                  alt="Medishop"
+                  width={180}
+                  height={50}
+                  className="h-12 w-auto object-contain"
                 />
-                <span className="hidden sm:block text-xs text-gray-500 mt-1">Delivery Partner</span>
+                <div>
+                  <span className="font-bold text-xl text-gray-900 block leading-tight">Medishop</span>
+                  <span className="hidden sm:block text-xs text-gray-500">Delivery Partner</span>
+                </div>
               </Link>
             </div>
 

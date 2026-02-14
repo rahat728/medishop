@@ -80,11 +80,12 @@ export function Navbar() {
                 <NextImage
                   src="/logo.png"
                   alt="Medishop"
-                  width={150}
-                  height={40}
-                  className="h-10 w-auto object-contain"
+                  width={200}
+                  height={56}
+                  className="h-14 w-auto object-contain"
                   priority
                 />
+                <span className="font-bold text-2xl text-gray-900 tracking-tight">Medishop</span>
               </Link>
             </div>
 
