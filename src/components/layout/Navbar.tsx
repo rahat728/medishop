@@ -72,16 +72,7 @@ export function Navbar() {
       <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            import Image from 'next/image';
 
-            // ... (existing imports, but Image needs to be added to top or assumed available if I can't see top. I will use replace for the whole header or just add import)
-            // Wait, I can't add import easily with block replace if it's far away.
-            // I will check if I can include the import in the block if it's nearby, or use a separate replacement.
-            // Navbar.tsx:
-            // 1: 'use client';
-            // 3: import React from ...
-            // 4: import Link ...
-            // I can add import Image from 'next/image'; after Link.
 
             {/* Logo */}
             <div className="flex items-center">
