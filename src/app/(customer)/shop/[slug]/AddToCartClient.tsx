@@ -28,7 +28,7 @@ export function AddToCartClient({ product }: AddToCartClientProps) {
             />
 
             <p className="text-xs text-gray-500 mt-4 text-center">
-                Secure transaction • Free delivery on orders over $50
+                Secure transaction • Free delivery on orders over ৳500
             </p>
         </div>
     );

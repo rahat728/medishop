@@ -95,7 +95,7 @@ export function DashboardOverview() {
             <StatsGrid columns={4}>
                 <StatsCard
                     title="Total Revenue"
-                    value={`$${stats?.todayRevenue.toFixed(2)}`}
+                    value={`৳${stats?.todayRevenue.toFixed(2)}`}
                     changeLabel="Today's earnings"
                     icon={<DollarSign className="w-6 h-6 text-green-600" />}
                     iconBgColor="bg-green-100"
@@ -168,7 +168,7 @@ export function DashboardOverview() {
                                         <p className="text-xs text-gray-500">{med.totalQty} units sold</p>
                                     </div>
                                 </div>
-                                <p className="text-sm font-bold text-gray-900">${med.revenue.toFixed(2)}</p>
+                                <p className="text-sm font-bold text-gray-900">৳{med.revenue.toFixed(2)}</p>
                             </div>
                         ))}
                     </div>

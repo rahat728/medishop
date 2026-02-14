@@ -290,7 +290,7 @@ function ShopContent() {
               )}
               {(minPrice > 0 || maxPrice < 1000) && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">
-                  ${minPrice} - ${maxPrice}
+                  ৳{minPrice} - ৳{maxPrice}
                   <button onClick={() => handlePriceChange(0, 1000)}>
                     <X className="w-3 h-3" />
                   </button>
