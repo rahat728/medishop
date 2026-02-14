@@ -60,7 +60,7 @@ export function AdminSidebar() {
             </div>
           ) : (
             <div className="relative h-10 w-40">
-              <Image
+              <NextImage
                 src="/logo.png"
                 alt="Medishop Admin"
                 fill
