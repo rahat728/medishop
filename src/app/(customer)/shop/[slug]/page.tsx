@@ -7,6 +7,8 @@ import {
     AlertTriangle,
     Star,
     Check,
+    ArrowRight,
+    Clock,
 } from 'lucide-react';
 import connectDB from '@/lib/db/mongoose';
 import { Medicine } from '@/lib/db/models';
@@ -79,210 +81,239 @@ export default async function ProductPage({ params }: ProductPageProps) {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm mb-8 bg-gray-800 p-3 rounded-lg overflow-x-auto whitespace-nowrap">
-                <Link href="/shop" className="text-gray-300 hover:text-primary-200 transition-colors">
+            <nav className="flex items-center gap-2 text-sm mb-12 bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto whitespace-nowrap">
+                <Link href="/shop" className="text-gray-500 hover:text-primary-600 transition-colors font-medium">
                     Shop
                 </Link>
                 <span className="text-gray-300">/</span>
                 <Link
                     href={`/shop?category=${encodeURIComponent(medicine.category)}`}
-                    className="text-gray-300 hover:text-primary-200 transition-colors"
+                    className="text-gray-500 hover:text-primary-600 transition-colors font-medium"
                 >
                     {medicine.category}
                 </Link>
                 <span className="text-gray-300">/</span>
-                <span className="text-gray-900 font-medium truncate">{medicine.name}</span>
+                <span className="text-gray-900 font-bold truncate">{medicine.name}</span>
             </nav>
 
             {/* Product Details */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
                 {/* Image */}
                 <div className="relative">
-                    <div className="aspect-square bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 shadow-inner">
+                    <div className="aspect-square bg-white rounded-[40px] overflow-hidden border border-gray-100 shadow-2xl shadow-gray-200/50 group">
                         {medicine.image ? (
                             <img
                                 src={medicine.image}
                                 alt={medicine.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-full h-full flex items-center justify-center bg-gray-50">
                                 <Package className="w-32 h-32 text-gray-200" />
                             </div>
                         )}
+
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
                     </div>
 
                     {/* Badges */}
-                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    <div className="absolute top-6 left-6 flex flex-col gap-3">
                         {discountPercentage > 0 && (
-                            <Badge variant="error" className="shadow-lg text-lg px-3 py-1">
+                            <div className="bg-red-500 text-white font-black px-4 py-2 rounded-2xl shadow-xl shadow-red-200 animate-pulse text-lg">
                                 -{discountPercentage}% OFF
-                            </Badge>
+                            </div>
                         )}
                         {medicine.isFeatured && (
-                            <Badge variant="warning" className="shadow-lg">
-                                <Star className="w-4 h-4 mr-1 fill-current" />
-                                Featured
-                            </Badge>
+                            <div className="bg-white/90 backdrop-blur-md text-amber-500 font-bold px-4 py-2 rounded-2xl shadow-xl border border-amber-100 flex items-center gap-2">
+                                <Star className="w-5 h-5 fill-current" />
+                                Premium Choice
+                            </div>
                         )}
                     </div>
                 </div>
 
                 {/* Info */}
-                <div className="flex flex-col">
-                    <div className="mb-4">
+                <div className="flex flex-col justify-center">
+                    <div className="mb-6">
                         <Link
                             href={`/shop?category=${encodeURIComponent(medicine.category)}`}
-                            className="px-3 py-1 bg-primary-50 text-primary-600 text-sm font-semibold rounded-full hover:bg-primary-100 transition-colors"
+                            className="inline-flex items-center px-4 py-1.5 bg-primary-50 text-primary-600 text-xs font-bold rounded-full border border-primary-100 uppercase tracking-widest hover:bg-primary-100 transition-all"
                         >
                             {medicine.category}
                         </Link>
                     </div>
 
-                    <h1 className="text-4xl font-bold text-white mb-2 leading-tight">
+                    <h1 className="text-5xl font-black text-gray-900 mb-4 leading-tight tracking-tight">
                         {medicine.name}
                     </h1>
 
-                    <p className="text-lg text-gray-300 mb-6">
-                        Manufactured by <span className="text-gray-900 font-medium">{medicine.manufacturer}</span>
+                    <p className="text-xl text-gray-500 mb-10 leading-relaxed font-medium">
+                        Crafted with care by <span className="text-primary-600 font-bold decoration-primary-200 underline underline-offset-4 decoration-2">{medicine.manufacturer}</span>
                     </p>
 
                     {/* Price Section */}
-                    <div className="mb-8 p-6 bg-gray-800 rounded-2xl border border-gray-700 shadow-sm">
-                        <div className="flex items-baseline gap-3 mb-4">
-                            <span className="text-4xl font-bold text-gray-900">
-                                ৳{medicine.price.toFixed(2)}
-                            </span>
-                            {medicine.compareAtPrice && medicine.compareAtPrice > medicine.price && (
-                                <span className="text-xl text-gray-400 line-through">
-                                    ৳{medicine.compareAtPrice.toFixed(2)}
+                    <div className="mb-12 relative overflow-hidden group">
+                        {/* Background Decoration */}
+                        <div className="absolute inset-0 bg-primary-600 rounded-[32px] translate-y-2 translate-x-2 blur-2xl opacity-5 group-hover:opacity-10 transition-opacity" />
+
+                        <div className="relative p-8 bg-white rounded-[32px] border border-gray-100 shadow-xl shadow-gray-200/50">
+                            <div className="flex items-baseline gap-4 mb-6">
+                                <span className="text-5xl font-black text-gray-900 tracking-tighter">
+                                    ৳{medicine.price.toFixed(2)}
                                 </span>
-                            )}
-                        </div>
+                                {medicine.compareAtPrice && medicine.compareAtPrice > medicine.price && (
+                                    <span className="text-2xl text-gray-400 line-through decoration-red-400/50 decoration-2">
+                                        ৳{medicine.compareAtPrice.toFixed(2)}
+                                    </span>
+                                )}
+                            </div>
 
-                        {/* Stock Status */}
-                        <div className="mb-6">
-                            {inStock ? (
-                                <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1.5 rounded-lg w-fit">
-                                    <Check className="w-5 h-5" />
-                                    <span className="font-semibold">In Stock</span>
-                                    <span className="text-green-700 opacity-75">• {medicine.stock} units left</span>
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-2 text-red-600 bg-red-50 px-3 py-1.5 rounded-lg w-fit">
-                                    <AlertTriangle className="w-5 h-5" />
-                                    <span className="font-semibold">Out of Stock</span>
-                                </div>
-                            )}
-                        </div>
+                            {/* Stock Status */}
+                            <div className="mb-10">
+                                {inStock ? (
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-2xl border border-green-100">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full animate-ping" />
+                                            <span className="font-bold text-sm">Ready for Delivery</span>
+                                        </div>
+                                        <span className="text-gray-400 text-sm font-medium">• Only {medicine.stock} left in stock</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-2xl border border-red-100">
+                                        <AlertTriangle className="w-5 h-5" />
+                                        <span className="font-bold">Currently Unavailable</span>
+                                    </div>
+                                )}
+                            </div>
 
-                        {/* Add to Cart */}
-                        <AddToCartClient product={cartProduct} />
+                            {/* Add to Cart */}
+                            <AddToCartClient product={cartProduct} />
+                        </div>
                     </div>
 
                     {/* Description */}
-                    <div className="mb-8">
-                        <h2 className="text-lg font-bold text-gray-900 mb-3">Product Description</h2>
-                        <p className="text-gray-600 leading-relaxed">
+                    <div className="mb-12">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-1.5 h-6 bg-primary-500 rounded-full" />
+                            <h2 className="text-xl font-black text-gray-900 uppercase tracking-wider">About this product</h2>
+                        </div>
+                        <p className="text-gray-600 text-lg leading-relaxed font-medium">
                             {medicine.description}
                         </p>
                     </div>
 
-                    {/* Features */}
-                    <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-100 mt-auto">
-                        <div className="text-center group">
-                            <div className="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-100 transition-colors">
+                    {/* Features Grid */}
+                    <div className="grid grid-cols-3 gap-4 pt-10 border-t border-gray-100">
+                        <div className="p-4 bg-gray-50 rounded-3xl text-center hover:bg-white hover:shadow-lg transition-all border border-transparent hover:border-gray-100 group">
+                            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-110 transition-transform">
                                 <Truck className="w-6 h-6 text-primary-600" />
                             </div>
-                            <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">Fast Delivery</p>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">60m Delivery</p>
                         </div>
-                        <div className="text-center group">
-                            <div className="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-100 transition-colors">
+                        <div className="p-4 bg-gray-50 rounded-3xl text-center hover:bg-white hover:shadow-lg transition-all border border-transparent hover:border-gray-100 group">
+                            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-110 transition-transform">
                                 <Shield className="w-6 h-6 text-primary-600" />
                             </div>
-                            <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">100% Genuine</p>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">100% Genuine</p>
                         </div>
-                        <div className="text-center group">
-                            <div className="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-100 transition-colors">
+                        <div className="p-4 bg-gray-50 rounded-3xl text-center hover:bg-white hover:shadow-lg transition-all border border-transparent hover:border-gray-100 group">
+                            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-110 transition-transform">
                                 <Package className="w-6 h-6 text-primary-600" />
                             </div>
-                            <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">Secure Pack</p>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Sterile Pack</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Product Details Sections */}
-            <div className="mb-20 text-white">
-                <h2 className="text-2xl font-bold text-white mb-8 pb-2 border-b-2 border-primary-500 w-fit">
-                    Safety & Usage Information
-                </h2>
+            {/* Safety & Info Sections */}
+            <div className="mb-32">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-4">
+                        Safety & Usage Guide
+                    </h2>
+                    <div className="w-24 h-1.5 bg-primary-500 mx-auto rounded-full" />
+                </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Dosage & Directions */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {/* Usage Card */}
                     {(medicine.dosage || medicine.directions) && (
-                        <Card className="border-none shadow-sm bg-gray-50/50">
-                            <CardContent className="p-8">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                    <div className="w-2 h-8 bg-primary-500 rounded-full" />
-                                    Dosage & Directions
-                                </h3>
+                        <div className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-xl shadow-gray-200/50 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-50 rounded-bl-[80px] -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+
+                            <h3 className="text-2xl font-black text-gray-900 mb-8 flex items-center gap-4 relative">
+                                <div className="w-12 h-12 bg-primary-100 rounded-2xl flex items-center justify-center">
+                                    <Clock className="w-6 h-6 text-primary-600" />
+                                </div>
+                                Directions for Use
+                            </h3>
+
+                            <div className="space-y-8 relative">
                                 {medicine.dosage && (
-                                    <div className="mb-6">
-                                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Recommended Dosage</p>
-                                        <p className="text-gray-700 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">{medicine.dosage}</p>
+                                    <div>
+                                        <p className="text-xs font-black text-primary-500 uppercase tracking-widest mb-3">Recommended Dosage</p>
+                                        <div className="bg-gray-50 p-6 rounded-3xl text-gray-700 font-medium leading-relaxed border border-gray-100">
+                                            {medicine.dosage}
+                                        </div>
                                     </div>
                                 )}
                                 {medicine.directions && (
                                     <div>
-                                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Usage Directions</p>
-                                        <p className="text-gray-700 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">{medicine.directions}</p>
+                                        <p className="text-xs font-black text-primary-500 uppercase tracking-widest mb-3">Administration</p>
+                                        <div className="bg-gray-50 p-6 rounded-3xl text-gray-700 font-medium leading-relaxed border border-gray-100">
+                                            {medicine.directions}
+                                        </div>
                                     </div>
                                 )}
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     )}
 
-                    <div className="space-y-8">
-                        {/* Active Ingredients */}
+                    <div className="space-y-10">
+                        {/* Ingredients */}
                         {medicine.activeIngredients?.length > 0 && (
-                            <Card className="border-none shadow-sm bg-primary-50/30">
-                                <CardContent className="p-8">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                        <div className="w-2 h-8 bg-primary-500 rounded-full" />
-                                        Active Ingredients
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {medicine.activeIngredients.map((ingredient: string, i: number) => (
-                                            <Badge key={i} variant="info" className="px-4 py-2 text-sm font-medium shadow-sm">
-                                                {ingredient}
-                                            </Badge>
-                                        ))}
+                            <div className="bg-gray-900 p-10 rounded-[40px] text-white shadow-2xl relative overflow-hidden group">
+                                <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-primary-500/20 rounded-full blur-3xl group-hover:scale-125 transition-transform" />
+
+                                <h3 className="text-2xl font-black mb-8 flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
+                                        <Package className="w-6 h-6 text-primary-300" />
                                     </div>
-                                </CardContent>
-                            </Card>
+                                    Composition
+                                </h3>
+
+                                <div className="flex flex-wrap gap-3 relative">
+                                    {medicine.activeIngredients.map((ingredient: string, i: number) => (
+                                        <span key={i} className="px-5 py-2.5 bg-white/10 rounded-2xl text-sm font-bold border border-white/10 hover:bg-primary-500 transition-colors cursor-default">
+                                            {ingredient}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
                         )}
 
                         {/* Warnings */}
                         {medicine.warnings?.length > 0 && (
-                            <Card className="border-none shadow-sm bg-gray-800/30">
-                                <CardContent className="p-8">
-                                    <h3 className="text-xl font-bold text-gray-300 mb-6 flex items-center gap-3">
-                                        <div className="w-2 h-8 bg-red-500 rounded-full" />
-                                        Safety Warnings
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {medicine.warnings.map((warning: string, i: number) => (
-                                            <div key={i} className="flex items-start gap-4 bg-gray-700 p-4 rounded-xl border border-red-100 shadow-sm">
-                                                <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                                                <p className="text-gray-300 text-sm font-medium">{warning}</p>
-                                            </div>
-                                        ))}
+                            <div className="bg-red-50 p-10 rounded-[40px] border border-red-100 relative overflow-hidden group">
+                                <h3 className="text-2xl font-black text-red-900 mb-8 flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+                                        <AlertTriangle className="w-6 h-6 text-red-600" />
                                     </div>
-                                </CardContent>
-                            </Card>
+                                    Safety Precautions
+                                </h3>
+
+                                <div className="space-y-4">
+                                    {medicine.warnings.map((warning: string, i: number) => (
+                                        <div key={i} className="flex gap-4 items-start bg-white p-5 rounded-3xl border border-red-100 shadow-sm group-hover:-translate-y-1 transition-transform">
+                                            <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0" />
+                                            <p className="text-red-900/80 font-bold text-sm leading-relaxed">{warning}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -290,17 +321,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Related Products */}
             {related.length > 0 && (
-                <section className="pt-16 border-t border-gray-100">
-                    <div className="flex items-center justify-between mb-10">
+                <section className="pt-24 border-t border-gray-100">
+                    <div className="flex items-end justify-between mb-16">
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900">Related Products</h2>
-                            <p className="text-gray-500 mt-1">Customers who bought this also viewed these medicines.</p>
+                            <div className="inline-flex items-center gap-2 text-primary-600 font-bold text-sm uppercase tracking-widest mb-3">
+                                <Package className="w-5 h-5" />
+                                Handpicked for you
+                            </div>
+                            <h2 className="text-4xl font-black text-gray-900 tracking-tight">You might also need</h2>
                         </div>
-                        <Link href={`/shop?category=${encodeURIComponent(medicine.category)}`} className="text-primary-600 font-bold hover:text-primary-700 transition-colors flex items-center gap-1">
-                            View All <Package className="w-4 h-4 ml-1" />
+                        <Link href={`/shop?category=${encodeURIComponent(medicine.category)}`} className="group text-primary-600 font-black hover:text-primary-700 transition-colors flex items-center gap-2">
+                            Explore All <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                         {related.map((product: any) => (
                             <ProductCard
                                 key={product._id}

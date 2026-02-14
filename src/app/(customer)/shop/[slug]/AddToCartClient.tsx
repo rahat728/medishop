@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Shield } from 'lucide-react';
 import { AddToCartButton } from '@/components/cart';
 
 interface AddToCartClientProps {
@@ -19,7 +20,7 @@ interface AddToCartClientProps {
 
 export function AddToCartClient({ product }: AddToCartClientProps) {
     return (
-        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+        <div className="space-y-4">
             <AddToCartButton
                 product={product}
                 showQuantity
@@ -27,9 +28,12 @@ export function AddToCartClient({ product }: AddToCartClientProps) {
                 fullWidth
             />
 
-            <p className="text-xs text-gray-500 mt-4 text-center">
-                Secure transaction • Free delivery on orders over ৳500
-            </p>
+            <div className="flex items-center justify-center gap-2 py-2">
+                <Shield className="w-4 h-4 text-green-500" />
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                    Safe payment • Free delivery over ৳500
+                </p>
+            </div>
         </div>
     );
 }
