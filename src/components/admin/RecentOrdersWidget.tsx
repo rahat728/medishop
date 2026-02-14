@@ -88,7 +88,7 @@ export function RecentOrdersWidget({ orders, loading }: RecentOrdersWidgetProps)
                             </div>
                             <div className="text-right">
                                 <p className="text-sm font-medium text-gray-900">
-                                    ${order.totalAmount.toFixed(2)}
+                                    ৳{order.totalAmount.toFixed(2)}
                                 </p>
                                 <OrderStatusBadge status={order.status} />
                             </div>

@@ -162,7 +162,7 @@ export function OrderActionsClient({
           label="Refund amount (optional)"
           value={refundAmount}
           onChange={(e) => setRefundAmount(e.target.value)}
-          placeholder={`Max ${totalAmount.toFixed(2)}`}
+          placeholder={`Max ৳${totalAmount.toFixed(2)}`}
         />
         <Input
           label="Reason (optional)"

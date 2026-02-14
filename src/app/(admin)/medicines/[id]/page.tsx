@@ -182,12 +182,12 @@ export default async function ViewMedicinePage({ params }: ViewMedicinePageProps
                         </CardHeader>
                         <CardContent>
                             <div className="text-3xl font-bold text-gray-900">
-                                ${medicine.price.toFixed(2)}
+                                ৳{medicine.price.toFixed(2)}
                             </div>
                             {medicine.compareAtPrice && medicine.compareAtPrice > medicine.price && (
                                 <div className="flex items-center gap-2 mt-1">
                                     <span className="text-gray-400 line-through">
-                                        ${medicine.compareAtPrice.toFixed(2)}
+                                        ৳{medicine.compareAtPrice.toFixed(2)}
                                     </span>
                                     <Badge variant="success">
                                         {Math.round(((medicine.compareAtPrice - medicine.price) / medicine.compareAtPrice) * 100)}% off

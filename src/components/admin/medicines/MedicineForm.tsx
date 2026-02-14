@@ -314,7 +314,7 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Input
-              label="Price ($) *"
+              label="Price (৳) *"
               name="price"
               type="number"
               step="0.01"
@@ -325,7 +325,7 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
             />
 
             <Input
-              label="Compare at Price ($)"
+              label="Compare at Price (৳)"
               name="compareAtPrice"
               type="number"
               step="0.01"

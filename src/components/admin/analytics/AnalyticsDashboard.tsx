@@ -122,14 +122,14 @@ export function AnalyticsDashboard() {
         />
         <StatsCard
           title="Revenue"
-          value={loading ? '—' : `$${(data?.summary.totalRevenue ?? 0).toLocaleString()}`}
+          value={loading ? '—' : `৳${(data?.summary.totalRevenue ?? 0).toLocaleString()}`}
           icon={<DollarSign className="w-6 h-6 text-green-600" />}
           iconBgColor="bg-green-100"
           loading={loading}
         />
         <StatsCard
           title="Avg Order"
-          value={loading ? '—' : `$${Math.round(data?.summary.avgOrderValue ?? 0).toLocaleString()}`}
+          value={loading ? '—' : `৳${Math.round(data?.summary.avgOrderValue ?? 0).toLocaleString()}`}
           icon={<Percent className="w-6 h-6 text-purple-600" />}
           iconBgColor="bg-purple-100"
           loading={loading}
@@ -223,7 +223,7 @@ export function AnalyticsDashboard() {
                         <div className="font-medium text-gray-900">{c._id}</div>
                         <div className="text-xs text-gray-500">{c.quantity} units</div>
                       </div>
-                      <div className="font-semibold text-gray-900">${Math.round(c.revenue).toLocaleString()}</div>
+                      <div className="font-semibold text-gray-900">৳{Math.round(c.revenue).toLocaleString()}</div>
                     </div>
                   ))
                 )}
@@ -257,7 +257,7 @@ export function AnalyticsDashboard() {
                         <div className="font-medium text-gray-900 truncate">{p._id}</div>
                         <div className="text-xs text-gray-500">{p.quantity} units</div>
                       </div>
-                      <div className="font-semibold text-gray-900">${Math.round(p.revenue).toLocaleString()}</div>
+                      <div className="font-semibold text-gray-900">৳{Math.round(p.revenue).toLocaleString()}</div>
                     </div>
                   ))
                 )}

@@ -250,10 +250,10 @@ export function MedicineList() {
       sortable: true,
       render: (value, medicine) => (
         <div>
-          <span className="font-medium">${value.toFixed(2)}</span>
+          <span className="font-medium">৳{value.toFixed(2)}</span>
           {medicine.compareAtPrice && medicine.compareAtPrice > value && (
             <span className="ml-2 text-xs text-gray-400 line-through">
-              ${medicine.compareAtPrice.toFixed(2)}
+              ৳{medicine.compareAtPrice.toFixed(2)}
             </span>
           )}
         </div>
