@@ -8,12 +8,8 @@ import {
     Eye,
     Package,
     Navigation,
-    User,
-    CheckCircle2,
-    Clock,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { Button, Badge } from '@/components/ui';
+import { showToast } from '@/lib/toast';
 import { DataTable, RowActions, StatsCard, StatsGrid, type Column } from '@/components/admin';
 import { OrderStatusBadge } from '@/components/admin/orders/OrderStatusBadge';
 import { type OrderStatus } from '@/lib/validations/order';
@@ -53,14 +49,15 @@ export function LogisticsList() {
             });
 
             const response = await fetch(`/api/orders?${params}`);
-            const data = await response.json();
+            const data: { success: boolean; data: { orders: Order[]; pagination: { total: number } }; error?: string } = await response.json();
 
             if (!response.ok) throw new Error(data.error || 'Failed to fetch logistics');
 
             setOrders(data.data.orders);
             setPagination(prev => ({ ...prev, total: data.data.pagination.total }));
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+            showToast.error(message);
         } finally {
             setLoading(false);
         }

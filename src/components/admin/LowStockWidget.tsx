@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { AlertTriangle, ArrowRight, Package } from 'lucide-react';
 
 interface Medicine {
@@ -76,10 +77,12 @@ export function LowStockWidget({ medicines, loading }: LowStockWidgetProps) {
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                                         {medicine.image ? (
-                                            <img
+                                            <Image
                                                 src={medicine.image}
                                                 alt={medicine.name}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                sizes="40px"
                                             />
                                         ) : (
                                             <Package className="w-5 h-5 text-gray-400" />
@@ -94,10 +97,10 @@ export function LowStockWidget({ medicines, loading }: LowStockWidgetProps) {
                                                 <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                                                     <div
                                                         className={`h-full rounded-full transition-all ${isOutOfStock
-                                                                ? 'bg-red-500'
-                                                                : stockPercentage < 50
-                                                                    ? 'bg-yellow-500'
-                                                                    : 'bg-green-500'
+                                                            ? 'bg-red-500'
+                                                            : stockPercentage < 50
+                                                                ? 'bg-yellow-500'
+                                                                : 'bg-green-500'
                                                             }`}
                                                         style={{ width: `${Math.min(stockPercentage, 100)}%` }}
                                                     />

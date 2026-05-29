@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Package, AlertTriangle, XCircle, ArrowRight, Edit } from 'lucide-react';
+import Image from 'next/image';
 import { Button, Badge, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 
 interface Medicine {
@@ -83,10 +84,12 @@ export function StockAlertsList({ medicines, loading, onUpdateStock }: StockAler
         >
             <div className="w-12 h-12 bg-white rounded-lg overflow-hidden flex items-center justify-center border border-gray-200">
                 {medicine.image ? (
-                    <img
+                    <Image
                         src={medicine.image}
                         alt={medicine.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="48px"
                     />
                 ) : (
                     <Package className="w-6 h-6 text-gray-400" />

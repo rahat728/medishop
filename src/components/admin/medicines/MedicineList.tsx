@@ -14,7 +14,8 @@ import {
   Package,
   AlertTriangle,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import Image from 'next/image';
+import { showToast } from '@/lib/toast';
 import { Button, Badge, Modal, ModalFooter } from '@/components/ui';
 import { AdminHeader } from '@/components/layout';
 import { DataTable, RowActions, type Column } from '@/components/admin';
@@ -45,6 +46,22 @@ interface PaginationData {
   limit: number;
   total: number;
   totalPages: number;
+}
+
+interface MedicineListResponse {
+  success: boolean;
+  data: {
+    medicines: Medicine[];
+    pagination: PaginationData;
+  };
+  message?: string;
+  error?: string;
+}
+
+interface GenericApiResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
 }
 
 // =============================================================================
@@ -88,7 +105,7 @@ export function MedicineList() {
       if (category) params.set('category', category);
 
       const response = await fetch(`/api/medicines?${params}`);
-      const data = await response.json();
+      const data: MedicineListResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch medicines');
@@ -96,8 +113,9 @@ export function MedicineList() {
 
       setMedicines(data.data.medicines);
       setPagination(data.data.pagination);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+      showToast.error(message);
     } finally {
       setLoading(false);
     }
@@ -125,17 +143,18 @@ export function MedicineList() {
         method: 'DELETE',
       });
 
-      const data = await response.json();
+      const data: GenericApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to delete medicine');
       }
 
-      toast.success('Medicine deleted successfully');
+      showToast.success('Medicine deleted successfully');
       setDeleteModal({ open: false });
       fetchMedicines();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+      showToast.error(message);
     }
   };
 
@@ -147,16 +166,17 @@ export function MedicineList() {
         body: JSON.stringify({ isActive: !currentStatus }),
       });
 
-      const data = await response.json();
+      const data: GenericApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to update medicine');
       }
 
-      toast.success(currentStatus ? 'Medicine deactivated' : 'Medicine activated');
+      showToast.success(currentStatus ? 'Medicine deactivated' : 'Medicine activated');
       fetchMedicines();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+      showToast.error(message);
     }
   };
 
@@ -168,16 +188,17 @@ export function MedicineList() {
         body: JSON.stringify({ isFeatured: !currentStatus }),
       });
 
-      const data = await response.json();
+      const data: GenericApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to update medicine');
       }
 
-      toast.success(currentStatus ? 'Removed from featured' : 'Added to featured');
+      showToast.success(currentStatus ? 'Removed from featured' : 'Added to featured');
       fetchMedicines();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+      showToast.error(message);
     }
   };
 
@@ -191,18 +212,19 @@ export function MedicineList() {
         body: JSON.stringify({ action: bulkAction, ids: selected }),
       });
 
-      const data = await response.json();
+      const data: GenericApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to perform action');
       }
 
-      toast.success(data.message);
+      showToast.success(data.message || 'Bulk action successful');
       setSelected([]);
       setBulkAction('');
       fetchMedicines();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+      showToast.error(message);
     }
   };
 
@@ -219,10 +241,12 @@ export function MedicineList() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
             {medicine.image ? (
-              <img
+              <Image
                 src={medicine.image}
                 alt={medicine.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="40px"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

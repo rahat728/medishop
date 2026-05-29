@@ -11,6 +11,7 @@ import {
     Clock,
 } from 'lucide-react';
 import connectDB from '@/lib/db/mongoose';
+import Image from 'next/image';
 import { Medicine } from '@/lib/db/models';
 import { Badge, Card, CardContent } from '@/components/ui';
 import { ProductCard } from '@/components/customer';
@@ -104,10 +105,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <div className="relative">
                     <div className="aspect-square bg-white rounded-[40px] overflow-hidden border border-gray-100 shadow-2xl shadow-gray-200/50 group">
                         {medicine.image ? (
-                            <img
+                            <Image
                                 src={medicine.image}
                                 alt={medicine.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-50">

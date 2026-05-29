@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Package } from 'lucide-react';
 
 interface OrderItem {
@@ -41,10 +42,12 @@ export function OrderItemsList({
                     <div key={index} className="flex items-center gap-4 py-4">
                         <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                             {item.medicine?.image ? (
-                                <img
+                                <Image
                                     src={item.medicine.image}
                                     alt={item.name}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    className="object-cover"
+                                    sizes="64px"
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center">

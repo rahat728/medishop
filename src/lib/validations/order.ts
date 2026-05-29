@@ -113,7 +113,7 @@ export const PAYMENT_STATUS_CONFIG: Record<PaymentStatus, {
 export const orderQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),
     limit: z.coerce.number().int().min(1).max(100).default(10),
-    search: z.string().optional(),
+    search: z.string().trim().max(100).optional(),
     status: z.enum(ORDER_STATUSES).optional(),
     paymentStatus: z.enum(PAYMENT_STATUSES).optional(),
     customerId: z.string().optional(),
@@ -148,17 +148,17 @@ export const createOrderSchema = z.object({
         quantity: z.number().int().min(1, 'Quantity must be at least 1'),
     })).min(1, 'Order must have at least one item'),
     shippingAddress: z.object({
-        firstName: z.string().min(1, 'First name is required'),
-        lastName: z.string().min(1, 'Last name is required'),
-        phone: z.string().min(1, 'Phone number is required'),
-        street: z.string().optional(),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
-        wardNo: z.string().min(1, 'Ward number is required'),
+        firstName: z.string().trim().min(1, 'First name is required').max(50),
+        lastName: z.string().trim().min(1, 'Last name is required').max(50),
+        phone: z.string().trim().min(1, 'Phone number is required').max(20),
+        street: z.string().trim().max(200).optional(),
+        city: z.string().trim().max(100).optional(),
+        state: z.string().trim().max(100).optional(),
+        zipCode: z.string().trim().max(20).optional(),
+        wardNo: z.string().trim().min(1, 'Ward number is required').max(20),
     }),
     paymentMethod: z.enum(['stripe', 'cod']),
-    notes: z.string().max(1000).optional(),
+    notes: z.string().trim().max(1000).optional(),
 });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;

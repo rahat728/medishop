@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { env } from '@/lib/env';
 
 // =============================================================================
 // Route Configuration
@@ -59,18 +60,20 @@ const publicRoutes = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
-  // Skip middleware for static files and API routes (except protected ones)
+  // 1. Skip middleware for static assets, public folder, and well-known files
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/images') ||
     pathname.startsWith('/favicon') ||
+    pathname.startsWith('/api/stripe/webhook') || // Handled internally with signature verification
     pathname.includes('.')
   ) {
     return NextResponse.next();
   }
 
-  // Check if route is public
+  // 2. Check if route is public
   const isPublicRoute = publicRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -79,33 +82,34 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get the token
+  // 3. Get the token with validated secret
   const token = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: env.NEXTAUTH_SECRET,
   });
 
-  // Check if route requires authentication
+  // 4. Check if route requires authentication
   const isProtectedRoute = protectedRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Redirect to login if not authenticated
+  // 5. Redirect to login if not authenticated
   if (isProtectedRoute && !token) {
+    console.warn(`🔐 Unauthorized access attempt to ${pathname} from ${ip}`);
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Check role-based access
+  // 6. Check role-based access
   if (token) {
-    const userRole = token.role as string;
+    const userRole = (token.role as string) || 'customer';
 
     // Find matching role route
     for (const [route, allowedRoles] of Object.entries(roleRoutes)) {
       if (pathname === route || pathname.startsWith(`${route}/`)) {
         if (!allowedRoles.includes(userRole)) {
-          // Redirect to unauthorized or appropriate page
+          console.error(`🚫 Role mismatch: User ${token.email} (${userRole}) attempted to access ${pathname}`);
           return NextResponse.redirect(new URL('/unauthorized', request.url));
         }
         break;

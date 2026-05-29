@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import {
   ShoppingBag,
@@ -12,14 +13,15 @@ import {
 import connectDB from '@/lib/db/mongoose';
 import { Medicine, Order, User } from '@/lib/db/models';
 import { AdminHeader } from '@/components/layout';
+const RecentOrdersWidget = dynamic(() => import('@/components/admin').then(mod => mod.RecentOrdersWidget));
+const LowStockWidget = dynamic(() => import('@/components/admin').then(mod => mod.LowStockWidget));
+const ActivityFeedWidget = dynamic(() => import('@/components/admin').then(mod => mod.ActivityFeedWidget));
+const SimpleBarChart = dynamic(() => import('@/components/admin').then(mod => mod.SimpleBarChart));
+const DonutChart = dynamic(() => import('@/components/admin').then(mod => mod.DonutChart));
+
 import {
   StatsCard,
   StatsGrid,
-  SimpleBarChart,
-  DonutChart,
-  RecentOrdersWidget,
-  LowStockWidget,
-  ActivityFeedWidget,
 } from '@/components/admin';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '@/components/ui';
 

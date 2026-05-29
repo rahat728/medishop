@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Minus, Plus, Trash2, Package } from 'lucide-react';
 import { useCartStore, type CartItem as CartItemType } from '@/store';
 
@@ -32,10 +33,12 @@ export function CartItem({ item, compact = false }: CartItemProps) {
             <div className="flex items-center gap-3 py-3">
                 <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {item.image ? (
-                        <img
+                        <Image
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="48px"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center">
@@ -62,10 +65,12 @@ export function CartItem({ item, compact = false }: CartItemProps) {
             <Link href={`/shop/${item.slug}`}>
                 <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {item.image ? (
-                        <img
+                        <Image
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                            fill
+                            className="object-cover hover:scale-105 transition-transform"
+                            sizes="96px"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center">

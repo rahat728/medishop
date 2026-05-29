@@ -25,7 +25,8 @@ export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
 export function successResponse<T>(
   data: T,
   message?: string,
-  status: number = 200
+  status: number = 200,
+  headers?: Record<string, string>
 ): NextResponse<ApiSuccessResponse<T>> {
   return NextResponse.json(
     {
@@ -33,7 +34,7 @@ export function successResponse<T>(
       data,
       message,
     },
-    { status }
+    { status, headers }
   );
 }
 
@@ -81,9 +82,9 @@ export function serverErrorResponse(
   error: unknown
 ): NextResponse<ApiErrorResponse> {
   console.error('Server Error:', error);
-  
+
   const message = error instanceof Error ? error.message : 'Internal server error';
-  
+
   return errorResponse(message, 500);
 }
 

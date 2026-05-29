@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db/mongoose';
 import { Order } from '@/lib/db/models';
 import mongoose from 'mongoose';
+import { successResponse, errorResponse, serverErrorResponse } from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
     try {
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
         const id = searchParams.get('id');
 
         if (!id) {
-            return NextResponse.json({ error: 'Order ID required' }, { status: 400 });
+            return errorResponse('Order ID required', 400);
         }
 
         await connectDB();
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
                 .lean();
         }
 
-        return NextResponse.json({
+        return successResponse({
             debug: {
                 requestedId: id,
                 isValidObjectId: isValid,
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
             }
         });
 
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        return serverErrorResponse(error);
     }
 }

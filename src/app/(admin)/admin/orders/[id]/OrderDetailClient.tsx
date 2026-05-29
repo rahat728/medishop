@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { AdminHeader } from '@/components/layout';
 import { Button, Card } from '@/components/ui';
+import { showToast } from '@/lib/toast';
 import {
     OrderStatusBadge,
     OrderTimeline,
@@ -23,10 +24,56 @@ import {
     AssignDriverModal,
 } from '@/components/admin/orders';
 import type { OrderStatus, PaymentStatus } from '@/lib/validations/order';
-import toast from 'react-hot-toast';
+interface Order {
+    _id: string;
+    orderNumber: string;
+    customer: {
+        _id: string;
+        name: string;
+        email: string;
+        phone: string;
+    };
+    items: Array<{
+        medicine: {
+            _id: string;
+            name: string;
+            image?: string;
+        };
+        name: string;
+        quantity: number;
+        price: number;
+        subtotal: number;
+    }>;
+    subtotal: number;
+    deliveryFee: number;
+    tax: number;
+    discount: number;
+    totalAmount: number;
+    status: OrderStatus;
+    paymentStatus: PaymentStatus;
+    paymentMethod: 'cod' | 'stripe';
+    deliveryAddress: {
+        wardNo: string;
+        street?: string;
+        city?: string;
+    };
+    deliveryNotes?: string;
+    deliveryMan?: {
+        _id: string;
+        name: string;
+        phone: string;
+    };
+    statusHistory: Array<{
+        status: OrderStatus;
+        timestamp: string;
+        note?: string;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+}
 
 interface OrderDetailClientProps {
-    order: any; // Order type is complex with populated fields
+    order: Order;
 }
 
 export function OrderStatusSelectWrapper({ orderId, currentStatus }: { orderId: string; currentStatus: OrderStatus }) {
@@ -40,7 +87,7 @@ export function OrderStatusSelectWrapper({ orderId, currentStatus }: { orderId: 
             currentStatus={currentStatus}
             onStatusChange={() => {
                 router.refresh();
-                toast.success('Status updated');
+                showToast.success('Status updated');
             }}
         />
     );
@@ -70,7 +117,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
         if (!data.success) {
             throw new Error(data.error || 'Failed to assign driver');
         }
-        toast.success('Driver assigned! Order moved to logistics.');
+        showToast.success('Driver assigned! Order moved to logistics.');
         refreshData();
     };
 

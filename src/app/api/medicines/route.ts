@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db/mongoose';
 import { Medicine } from '@/lib/db/models';
 import { withAdmin } from '@/lib/auth';
+import { sanitizeQuery } from '@/lib/sanitize';
 import {
   successResponse,
   errorResponse,
@@ -106,6 +107,8 @@ export async function GET(request: NextRequest) {
         hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1,
       },
+    }, undefined, 200, {
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
     });
   } catch (error) {
     return serverErrorResponse(error);
@@ -120,7 +123,7 @@ export const POST = withAdmin(async (request, { user }) => {
   try {
     await connectDB();
 
-    const body = await request.json();
+    const body = sanitizeQuery(await request.json());
 
     // Validate input
     const validationResult = createMedicineSchema.safeParse(body);

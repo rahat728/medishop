@@ -10,7 +10,7 @@ import {
     User,
     Truck,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { showToast } from '@/lib/toast';
 import { AdminHeader } from '@/components/layout';
 import { Button, Badge } from '@/components/ui';
 import { DataTable, RowActions, StatsCard, StatsGrid, type Column } from '@/components/admin';
@@ -62,6 +62,16 @@ interface OrderStats {
     deliveredOrders: number;
 }
 
+interface OrderListResponse {
+    success: boolean;
+    data: {
+        orders: Order[];
+        pagination: PaginationData;
+        stats: OrderStats;
+    };
+    message?: string;
+}
+
 // =============================================================================
 // Component
 // =============================================================================
@@ -110,17 +120,18 @@ export function OrderList() {
             if (endDate) params.set('endDate', endDate);
 
             const response = await fetch(`/api/orders?${params}`);
-            const data = await response.json();
+            const data: OrderListResponse = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch orders');
+                throw new Error(data.message || 'Failed to fetch orders');
             }
 
             setOrders(data.data.orders);
             setPagination(data.data.pagination);
             setStats(data.data.stats);
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'An unexpected error occurred';
+            showToast.error(message);
         } finally {
             setLoading(false);
         }

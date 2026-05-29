@@ -6,7 +6,18 @@ import { Order, Cart } from '@/lib/db/models';
 import { getStripe } from '@/lib/stripe';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 
+import { rateLimit } from '@/lib/rate-limit';
+import {
+    errorResponse,
+} from '@/lib/api-response';
+
 export async function POST(req: NextRequest) {
+    // Rate limiting: 30 requests per minute (shared for all webhooks as a safety measure)
+    const limitResult = await rateLimit('stripe-webhook', { limit: 30, windowMs: 60000 });
+    if (!limitResult.success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const body = await req.text();
     const signature = (await headers()).get('stripe-signature') as string;
 

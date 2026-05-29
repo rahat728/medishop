@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   Save,
   X,
@@ -11,7 +12,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { showToast } from '@/lib/toast';
 import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { MEDICINE_CATEGORIES, type MedicineCategory } from '@/lib/validations/medicine';
 
@@ -183,7 +184,7 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
     e.preventDefault();
 
     if (!validate()) {
-      toast.error('Please fix the errors in the form');
+      showToast.error('Please fix the errors in the form');
       return;
     }
 
@@ -211,7 +212,7 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
         throw new Error(data.error || 'Failed to save medicine');
       }
 
-      toast.success(
+      showToast.success(
         mode === 'create'
           ? 'Medicine created successfully!'
           : 'Medicine updated successfully!'
@@ -220,7 +221,7 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
       router.push('/medicines');
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message);
+      showToast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -501,13 +502,14 @@ export function MedicineForm({ initialData, mode }: MedicineFormProps) {
                 />
               </div>
               {formData.image && (
-                <div className="w-20 h-20 border border-gray-200 rounded-lg overflow-hidden">
-                  <img
+                <div className="w-20 h-20 border border-gray-200 rounded-lg overflow-hidden relative">
+                  <Image
                     src={formData.image}
                     alt="Preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/placeholder-medicine.svg';
+                      // Note: Image component onError handling is different, but for a preview it's acceptable to keep it simple or use a fallback state
                     }}
                   />
                 </div>

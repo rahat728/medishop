@@ -26,11 +26,13 @@ export type MedicineCategory = typeof MEDICINE_CATEGORIES[number];
 export const createMedicineSchema = z.object({
   name: z
     .string()
+    .trim()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name cannot exceed 100 characters'),
 
   description: z
     .string()
+    .trim()
     .min(10, 'Description must be at least 10 characters')
     .max(2000, 'Description cannot exceed 2000 characters'),
 
@@ -62,6 +64,7 @@ export const createMedicineSchema = z.object({
 
   manufacturer: z
     .string()
+    .trim()
     .min(2, 'Manufacturer must be at least 2 characters')
     .max(100, 'Manufacturer cannot exceed 100 characters'),
 

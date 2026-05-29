@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Package, Star } from 'lucide-react';
 import { Badge } from '@/components/ui';
 import { AddToCartButton } from '@/components/cart';
@@ -43,10 +44,12 @@ export function ProductCard({ product }: ProductCardProps) {
             <Link href={`/shop/${product.slug}`}>
                 <div className="relative aspect-square bg-gray-50 overflow-hidden">
                     {product.image ? (
-                        <img
+                        <Image
                             src={product.image}
                             alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center">

@@ -6,3 +6,5 @@ export * from './Spinner';
 export * from './EmptyState';
 export * from './Modal';
 export * from './Dropdown';
+export * from './ErrorState';
+export * from './Skeleton';

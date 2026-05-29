@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import connectDB from '@/lib/db/mongoose';
 import { Order, Medicine, User } from '@/lib/db/models';
 import { withAdmin, withAuth } from '@/lib/auth';
+import { sanitizeQuery } from '@/lib/sanitize';
 import { sendOrderConfirmationEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } from '@/lib/email';
 import {
     successResponse,
@@ -11,6 +12,8 @@ import {
     validationErrorResponse,
 } from '@/lib/api-response';
 import { orderQuerySchema, createOrderSchema } from '@/lib/validations/order';
+
+import { rateLimit } from '@/lib/rate-limit';
 
 // =============================================================================
 // GET /api/orders - List orders (admin or delivery)
@@ -132,7 +135,7 @@ export const GET = withAuth(async (request, { user }) => {
         // Calculate stats only for admin
         let stats = null;
         if (isAdmin) {
-            const allOrders = await Order.find(query).select('totalAmount status');
+            const allOrders = await Order.find(query).select('totalAmount status').lean();
             stats = {
                 totalOrders: total,
                 totalRevenue: allOrders.reduce((sum, order) => sum + order.totalAmount, 0),
@@ -164,9 +167,18 @@ export const GET = withAuth(async (request, { user }) => {
 
 export const POST = withAuth(async (request, { user }) => {
     try {
+        // Rate limiting: 10 requests per minute per user/IP
+        const ip = request.headers.get('x-forwarded-for') || 'unknown';
+        const identifier = `order-${user.id || ip}`;
+        const limitResult = await rateLimit(identifier, { limit: 10, windowMs: 60000 });
+
+        if (!limitResult.success) {
+            return errorResponse('Too many order attempts. Please try again in a minute.', 429);
+        }
+
         await connectDB();
 
-        const body = await request.json();
+        const body = sanitizeQuery(await request.json());
 
         // Validate request body
         const validation = createOrderSchema.safeParse(body);

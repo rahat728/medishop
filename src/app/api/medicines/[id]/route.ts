@@ -36,7 +36,9 @@ export async function GET(
       return notFoundResponse('Medicine not found');
     }
 
-    return successResponse(medicine);
+    return successResponse(medicine, undefined, 200, {
+      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
+    });
   } catch (error) {
     return serverErrorResponse(error);
   }
