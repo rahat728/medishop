@@ -56,6 +56,11 @@ export default async function CustomerOrdersPage() {
                           <span className="font-mono font-medium text-gray-900">
                             {order.orderNumber}
                           </span>
+                          {order.isEmergency && (
+                            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
+                              🚑 Emergency
+                            </span>
+                          )}
                           <Badge
                             variant={
                               order.status === 'delivered' ? 'success' :

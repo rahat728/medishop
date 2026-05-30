@@ -42,7 +42,7 @@ export function OrderItemsList({
             <div className="divide-y divide-gray-100">
                 {items.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 py-4">
-                        <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                             {item.medicine?.image ? (
                                 <Image
                                     src={item.medicine.image}

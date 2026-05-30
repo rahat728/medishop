@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { Card, CardContent } from '@/components/ui';
 import { requireDelivery } from '@/lib/auth';
 import { DeliveryOrderCard } from '@/components/delivery/DeliveryOrderCard';
+import { Badge } from '@/components/ui';
 import connectDB from '@/lib/db/mongoose';
 import { Order } from '@/lib/db/models';
 
@@ -38,7 +39,7 @@ async function getOrders(userId: string) {
     status: { $ne: 'delivered' }
   })
     .populate('customer', 'name phone')
-    .sort({ createdAt: -1 })
+    .sort({ isEmergency: -1, createdAt: -1 })
     .lean();
 }
 

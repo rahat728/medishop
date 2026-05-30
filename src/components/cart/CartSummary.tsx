@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
-import { useCartStore } from '@/store';
+import { useCartStore, useCheckoutStore } from '@/store';
 import { Button } from '@/components/ui';
 
 interface CartSummaryProps {
@@ -12,11 +12,13 @@ interface CartSummaryProps {
 
 export function CartSummary({ showCheckoutButton = true }: CartSummaryProps) {
     const { items, getSubtotal } = useCartStore();
+    const { isEmergency } = useCheckoutStore();
 
     const subtotal = getSubtotal();
+    const emergencyFee = isEmergency ? 99 : 0;
     const deliveryFee = subtotal > 50 ? 0 : 5.99;
     const tax = subtotal * 0.08; // 8% tax
-    const total = subtotal + deliveryFee + tax;
+    const total = subtotal + deliveryFee + emergencyFee + tax;
 
     if (items.length === 0) {
         return null;
@@ -44,6 +46,15 @@ export function CartSummary({ showCheckoutButton = true }: CartSummaryProps) {
                 <div className="flex justify-between text-gray-600">
                     <span>Estimated Tax</span>
                     <span>৳{tax.toFixed(2)}</span>
+                </div>
+
+                <div className='flex justify-between text-gray-600'>
+                    <span>Emergency Delivery</span>
+                    {emergencyFee > 0 ? (
+                        <span className='text-red-600 font-medium'>৳{emergencyFee.toFixed(2)}</span>
+                    ) : (
+                        <span className='text-gray-400'>--</span>
+                    )}
                 </div>
 
                 {subtotal < 50 && (

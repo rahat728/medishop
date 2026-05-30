@@ -17,10 +17,12 @@ interface CheckoutState {
     step: number;
     shippingAddress: ShippingAddress | null;
     paymentMethod: 'card' | 'cod';
+    isEmergency: boolean;
 
     // Actions
     setStep: (step: number) => void;
     setShippingAddress: (address: ShippingAddress) => void;
+    setIsEmergency: (value: boolean) => void;
     setPaymentMethod: (method: 'card' | 'cod') => void;
     resetCheckout: () => void;
 }
@@ -31,10 +33,13 @@ export const useCheckoutStore = create<CheckoutState>()(
             step: 1,
             shippingAddress: null,
             paymentMethod: 'card',
+            isEmergency: false,
 
             setStep: (step) => set({ step }),
 
             setShippingAddress: (address) => set({ shippingAddress: address }),
+
+            setIsEmergency: (value) => set({ isEmergency: value }),
 
             setPaymentMethod: (method) => set({ paymentMethod: method }),
 
@@ -52,6 +57,7 @@ export const useCheckoutStore = create<CheckoutState>()(
                     phone: '',
                 },
                 paymentMethod: 'card',
+                isEmergency: false,
             }),
         }),
         {

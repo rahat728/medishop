@@ -101,6 +101,7 @@ export function OrderList() {
     const [paymentFilter, setPaymentFilter] = useState(searchParams.get('paymentStatus') || '');
     const [startDate, setStartDate] = useState(searchParams.get('startDate') || '');
     const [endDate, setEndDate] = useState(searchParams.get('endDate') || '');
+    const [emergencyFilter, setEmergencyFilter] = useState(searchParams.get('isEmergency') || '');
 
     // =============================================================================
     // Data Fetching
@@ -119,6 +120,8 @@ export function OrderList() {
             if (paymentFilter) params.set('paymentStatus', paymentFilter);
             if (startDate) params.set('startDate', startDate);
             if (endDate) params.set('endDate', endDate);
+            if (emergencyFilter === 'yes') params.set('isEmergency', 'true');
+            if (emergencyFilter === 'no') params.set('isEmergency', 'false');
 
             const response = await fetch(`/api/orders?${params}`);
             const data: OrderListResponse = await response.json();
@@ -365,7 +368,20 @@ export function OrderList() {
                     />
                 </div>
 
-                {(statusFilter || paymentFilter || startDate || endDate || search) && (
+                <select
+                    value={emergencyFilter}
+                    onChange={(e) => {
+                        setEmergencyFilter(e.target.value);
+                        setPagination((prev) => ({ ...prev, page: 1 }));
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                >
+                    <option value="">All Types</option>
+                    <option value="yes">🚑 Emergency Only</option>
+                    <option value="no">Regular Only</option>
+                </select>
+
+                {(statusFilter || paymentFilter || startDate || endDate || search || emergencyFilter) && (
                     <Button
                         variant="ghost"
                         onClick={() => {
@@ -374,6 +390,7 @@ export function OrderList() {
                             setStartDate('');
                             setEndDate('');
                             setSearch('');
+                            setEmergencyFilter('');
                             setPagination((prev) => ({ ...prev, page: 1 }));
                         }}
                         className="text-primary-600 hover:text-primary-700"

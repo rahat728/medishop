@@ -88,6 +88,16 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
         </CardContent>
       </Card>
 
+      {order.isEmergency && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-center gap-3 animate-pulse">
+          <span className="text-2xl">🚑</span>
+          <div>
+            <h3 className="font-bold text-red-700">EMERGENCY DELIVERY</h3>
+            <p className="text-sm text-red-600">This order requires delivery within 1-2 hours. Extra fee: ৳{order.emergencyFee?.toFixed(2) || '99.00'}</p>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
@@ -122,6 +132,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
                 deliveryFee={order.deliveryFee}
                 tax={order.tax}
                 discount={order.discount}
+                emergencyFee={order.emergencyFee}
                 total={order.totalAmount}
               />
             </CardContent>

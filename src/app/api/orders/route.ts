@@ -115,6 +115,9 @@ export const GET = withAuth(async (request, { user }) => {
             query.status = { $in: ['assigned', 'picked_up', 'on_the_way'] };
         }
 
+        if (searchParams.get('isEmergency') === 'true') query.isEmergency = true;
+        if (searchParams.get('isEmergency') === 'false') query.isEmergency = false;
+
         if (startDate || endDate) {
             query.createdAt = {};
             if (startDate) query.createdAt.$gte = new Date(startDate);

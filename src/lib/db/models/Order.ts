@@ -67,6 +67,10 @@ export interface IOrder extends Document {
   actualDelivery?: Date;
   deliveryNotes?: string;
 
+  // Emergency Delivery
+  isEmergency: boolean;
+  emergencyFee: number;
+
   // Cancellation/Refund
   cancelledAt?: Date;
   cancellationReason?: string;
@@ -253,6 +257,18 @@ const OrderSchema = new Schema<IOrder>(
     actualDelivery: Date,
     deliveryNotes: String,
 
+    // Emergency Delivery
+    isEmergency: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    emergencyFee: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     // Cancellation
     cancelledAt: Date,
     cancellationReason: String,
@@ -275,6 +291,7 @@ OrderSchema.index({ deliveryMan: 1, status: 1 });
 OrderSchema.index({ status: 1, createdAt: -1 });
 OrderSchema.index({ paymentStatus: 1 });
 OrderSchema.index({ createdAt: -1 });
+OrderSchema.index({ isEmergency: 1, createdAt: -1 });
 
 // =============================================================================
 // Instance Methods
