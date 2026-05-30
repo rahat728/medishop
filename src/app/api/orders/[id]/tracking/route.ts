@@ -17,7 +17,7 @@ export const GET = withAuth(async (request: NextRequest, { user, params }) => {
     const order = await Order.findById(id)
       .populate('customer', 'name email phone')
       .populate('deliveryMan', 'name phone lastLocation')
-      .select('orderNumber status paymentStatus deliveryAddress deliveryLocation deliveryMan customer createdAt updatedAt estimatedDelivery actualDelivery')
+      .select('orderNumber status paymentStatus deliveryAddress deliveryLocation deliveryMan customer createdAt updatedAt estimatedDelivery actualDelivery isEmergency')
       .lean();
 
     if (!order) return notFoundResponse('Order not found');
@@ -76,6 +76,7 @@ export const GET = withAuth(async (request: NextRequest, { user, params }) => {
       estimatedDelivery: (order as any).estimatedDelivery,
       actualDelivery: (order as any).actualDelivery,
       deliveryAddress: (order as any).deliveryAddress,
+      isEmergency: (order as any).isEmergency,
       destinationCoords,
       driverCoords,
       deliveryMan: (order as any).deliveryMan

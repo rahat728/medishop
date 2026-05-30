@@ -31,7 +31,7 @@ export function CartItem({ item, compact = false }: CartItemProps) {
     if (compact) {
         return (
             <div className="flex items-center gap-3 py-3">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="relative w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {item.image ? (
                         <Image
                             src={item.image}
@@ -63,7 +63,7 @@ export function CartItem({ item, compact = false }: CartItemProps) {
         <div className="flex items-start gap-4 py-6 border-b border-gray-100">
             {/* Image */}
             <Link href={`/shop/${item.slug}`}>
-                <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {item.image ? (
                         <Image
                             src={item.image}

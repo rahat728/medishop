@@ -158,6 +158,8 @@ export const createOrderSchema = z.object({
         wardNo: z.string().trim().min(1, 'Ward number is required').max(20),
     }),
     paymentMethod: z.enum(['stripe', 'cod']),
+    isEmergency: z.boolean().optional(),
+    emergencyFee: z.number().optional(),
     notes: z.string().trim().max(1000).optional(),
 });
 

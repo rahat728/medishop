@@ -25,9 +25,16 @@ export function TrackingPanel({ data }: { data: OrderTrackingData }) {
             <div className="text-sm text-gray-500">Order</div>
             <div className="text-lg font-semibold text-gray-900">{data.orderNumber}</div>
           </div>
-          <Badge variant="info" className="capitalize">
-            {String(data.status).replace('_', ' ')}
-          </Badge>
+          <div className="flex gap-2">
+            {data.isEmergency && (
+              <Badge variant="danger" className="bg-red-500 text-white border-transparent flex gap-1 items-center font-bold px-2 py-1">
+                <span className="text-xs">🚑</span> Emergency (30m)
+              </Badge>
+            )}
+            <Badge variant="info" className="capitalize">
+              {String(data.status).replace('_', ' ')}
+            </Badge>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

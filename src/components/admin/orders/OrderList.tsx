@@ -36,6 +36,7 @@ interface Order {
     totalAmount: number;
     status: OrderStatus;
     paymentStatus: PaymentStatus;
+    isEmergency?: boolean;
     deliveryMan?: {
         _id: string;
         name: string;
@@ -159,8 +160,15 @@ export function OrderList() {
             header: 'Order',
             render: (_, order) => (
                 <div>
-                    <p className="font-medium text-gray-900">{order.orderNumber}</p>
-                    <p className="text-xs text-gray-500">
+                    <div className="flex items-center gap-2">
+                        <p className="font-medium text-gray-900">{order.orderNumber}</p>
+                        {order.isEmergency && (
+                            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse shadow-sm shadow-red-200">
+                                🚑 URGENT
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
                         {format(new Date(order.createdAt), 'MMM d, yyyy h:mm a')}
                     </p>
                 </div>

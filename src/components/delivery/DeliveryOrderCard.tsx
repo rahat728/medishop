@@ -19,9 +19,16 @@ export function DeliveryOrderCard({ order }: DeliveryOrderCardProps) {
                     <div className="p-5 space-y-4">
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-xs font-bold text-primary-600 uppercase tracking-widest">
-                                    {order.orderNumber}
-                                </p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-xs font-bold text-primary-600 uppercase tracking-widest">
+                                        {order.orderNumber}
+                                    </p>
+                                    {order.isEmergency && (
+                                        <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                                            🚑
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-sm font-medium text-gray-500 mt-0.5">
                                     {format(new Date(order.createdAt), 'MMM d, h:mm a')}
                                 </p>

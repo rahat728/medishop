@@ -16,7 +16,7 @@ export const POST = withAuth(async (request, { user }) => {
 
         const body = await request.json();
         let items = body.items;
-        const { shippingAddress, notes } = body;
+        const { shippingAddress, notes, isEmergency, emergencyFee } = body;
 
         // If no items in body, try to get from DB cart (fallback)
         if (!items || !Array.isArray(items) || items.length === 0) {
@@ -69,7 +69,7 @@ export const POST = withAuth(async (request, { user }) => {
         // Logic: subtotal > 50 -> free delivery, else 5.99. Tax: 8%
         const deliveryFee = subtotal > 50 ? 0 : 5.99;
         const tax = subtotal * 0.08;
-        const totalAmount = subtotal + deliveryFee + tax;
+        const totalAmount = subtotal + deliveryFee + (emergencyFee || 0) + tax;
 
         // Generate order number explicitly
         const date = new Date();
@@ -84,6 +84,8 @@ export const POST = withAuth(async (request, { user }) => {
             items: orderItems,
             subtotal,
             deliveryFee,
+            isEmergency: isEmergency || false,
+            emergencyFee: emergencyFee || 0,
             tax,
             totalAmount,
             deliveryAddress: shippingAddress,

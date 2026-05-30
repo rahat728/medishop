@@ -49,6 +49,8 @@ interface Order {
     tax: number;
     discount: number;
     totalAmount: number;
+    isEmergency?: boolean;
+    emergencyFee?: number;
     status: OrderStatus;
     paymentStatus: PaymentStatus;
     paymentMethod: 'cod' | 'stripe';
@@ -136,6 +138,11 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                         <h1 className="text-2xl font-bold text-gray-900">
                             Order {order.orderNumber}
                         </h1>
+                        {order.isEmergency && (
+                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 animate-pulse shadow-sm shadow-red-200">
+                                🚑 EMERGENCY
+                            </span>
+                        )}
                         <OrderStatusBadge status={currentStatus} />
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
@@ -166,6 +173,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                             deliveryFee={order.deliveryFee}
                             tax={order.tax}
                             discount={order.discount}
+                            emergencyFee={order.emergencyFee}
                             total={order.totalAmount}
                         />
                     </Card>

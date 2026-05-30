@@ -11,6 +11,7 @@ export interface OrderTrackingData {
   driverCoords: { lat: number; lng: number; updatedAt?: string; source?: string } | null;
   deliveryAddress: any;
   deliveryMan: { _id: string; name: string; phone?: string } | null;
+  isEmergency?: boolean;
   updatedAt?: string;
 }
 

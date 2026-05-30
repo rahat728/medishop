@@ -47,6 +47,11 @@ export default function DeliveryActivePage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-sm text-gray-500">{activeOrder.orderNumber}</span>
+                {activeOrder.isEmergency && (
+                    <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse shadow-sm shadow-red-200">
+                        🚑 URGENT
+                    </span>
+                )}
                 <Badge variant="info">{String(activeOrder.status).replace('_', ' ')}</Badge>
               </div>
 

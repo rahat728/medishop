@@ -21,7 +21,7 @@ export const GET = withDelivery(async (request: NextRequest, { user }) => {
 
         const orders = await Order.find(query)
             .populate('customer', 'name phone email')
-            .sort({ updatedAt: -1, createdAt: -1 })
+            .sort({ isEmergency: -1, updatedAt: -1, createdAt: -1 })
             .lean();
 
         return successResponse({ orders });

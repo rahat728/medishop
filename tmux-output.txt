@@ -1,0 +1,75 @@
+╭─ ~/meddelivery ························································ ✔ ─╮
+╰─                                                                              ─╯
+
+[WARNING]: Console output during zsh initialization detected.
+
+When using Powerlevel10k with instant prompt, console output during zsh
+initialization may indicate issues.
+
+You can:
+
+  - Recommended: Change ~/.zshrc so that it does not perform console I/O
+    after the instant prompt preamble. See the link below for details.
+
+    * You will not see this error message again.
+    * Zsh will start quickly and prompt will update smoothly.
+
+  - Suppress this warning either by running p10k configure or by manually
+    defining the following parameter:
+
+      typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+    * You will not see this error message again.
+    * Zsh will start quickly but prompt will jump down after initialization.
+
+  - Disable instant prompt either by running p10k configure or by manually
+    defining the following parameter:
+
+      typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+
+    * You will not see this error message again.
+    * Zsh will start slowly.
+
+  - Do nothing.
+
+    * You will see this error message every time you start zsh.
+    * Zsh will start quickly but prompt will jump down after initialization.
+
+For details, see:
+https://github.com/romkatv/powerlevel10k#instant-prompt
+
+-- console output produced during zsh initialization follows --
+
+            .-/+oossssoo+/-.
+        `:+ssssssssssssssssss+:`           rahat@rahat-HP-EliteBook-840-G3
+      -+ssssssssssssssssssyyssss+-         -------------------------------
+    .ossssssssssssssssssdMMMNysssso.       OS: Ubuntu 22.04.5 LTS x86_64
+   /ssssssssssshdmmNNmmyNMMMMhssssss/      Host: HP EliteBook 840 G3
+  +ssssssssshmydMMMMMMMNddddyssssssss+     Kernel: 6.8.0-124-generic
+ /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Uptime: 12 hours, 9 mins
+.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Packages: 3394 (dpkg), 21 (snap)
++sssshhhyNMMNyssssssssssssyNMMMysssssss+   Shell: zsh 5.8.1
+ossyNMMMNyMMhsssssssssssssshmmmhssssssso   Resolution: 1920x1080
+ossyNMMMNyMMhsssssssssssssshmmmhssssssso   DE: GNOME 42.9
++sssshhhyNMMNyssssssssssssyNMMMysssssss+   WM: Mutter
+.ssssssssdMMMNhsssssssssshNMMMdssssssss.   WM Theme: Adwaita
+ /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/    Theme: Yaru [GTK2/3]
+  +sssssssssdmydMMMMMMMMddddyssssssss+     Icons: Yaru [GTK2/3]
+   /ssssssssssshdmNNNNmyNMMMMhssssss/      Terminal: tmux
+    .ossssssssssssssssssdMMMNysssso.       CPU: Intel i5-6300U (4) @ 3.000GHz
+      -+sssssssssssssssssyyyssss+-         GPU: Intel Skylake GT2 [HD Graphics 520
+        `:+ssssssssssssssssss+:`           Memory: 5541MiB / 7822MiB
+            .-/+oossssoo+/-.
+
+
+
+❯
+❯
+❯
+❯
+❯
+❯
+❯
+
+╭─ ~/meddelivery  main !18 ?1 ······································ INT ✘ ─╮
+╰─                                                                              ─╯

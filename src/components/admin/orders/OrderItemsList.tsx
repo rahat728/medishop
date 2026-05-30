@@ -23,6 +23,7 @@ interface OrderItemsListProps {
     deliveryFee: number;
     tax: number;
     discount: number;
+    emergencyFee?: number;
     total: number;
 }
 
@@ -32,6 +33,7 @@ export function OrderItemsList({
     deliveryFee,
     tax,
     discount,
+    emergencyFee,
     total,
 }: OrderItemsListProps) {
     return (
@@ -97,6 +99,12 @@ export function OrderItemsList({
                         <span className="text-green-600">-৳{discount.toFixed(2)}</span>
                     </div>
                 )}
+                {emergencyFee ? (
+                    <div className="flex justify-between text-sm">
+                        <span className="text-red-500 font-semibold">🚑 Emergency Fee</span>
+                        <span className="text-gray-900">৳{emergencyFee.toFixed(2)}</span>
+                    </div>
+                ) : null}
                 <div className="flex justify-between text-lg font-semibold border-t border-gray-200 pt-2">
                     <span className="text-gray-900">Total</span>
                     <span className="text-gray-900">৳{total.toFixed(2)}</span>

@@ -18,7 +18,7 @@ const shippingSchema = z.object({
 type ShippingFormData = z.infer<typeof shippingSchema>;
 
 export function ShippingForm() {
-    const { setShippingAddress, setStep, shippingAddress } = useCheckoutStore();
+    const { setShippingAddress, setStep, shippingAddress, isEmergency, setIsEmergency } = useCheckoutStore();
 
     const {
         register,
@@ -102,6 +102,27 @@ export function ShippingForm() {
                         {...register('phone')}
                         error={errors.phone?.message}
                     />
+                </div>
+
+                <div className="pt-6 border-t border-gray-100">
+                    <div
+                        className={`p-4 rounded-xl border-2 transition-colors cursor-pointer flex items-start gap-3 ${isEmergency ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-white hover:border-red-200'}`}
+                        onClick={() => setIsEmergency(!isEmergency)}
+                    >
+                        <div className={`mt-0.5 w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center ${isEmergency ? 'bg-red-500 border-red-500' : 'border-gray-300'}`}>
+                            {isEmergency && (
+                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                            )}
+                        </div>
+                        <div>
+                            <h4 className={`font-bold ${isEmergency ? 'text-red-700' : 'text-gray-900'}`}>🚑 Emergency Delivery (৳99)</h4>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Need it urgent? Get your medicine delivered within 30 minutes.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-6 border-t border-gray-100">

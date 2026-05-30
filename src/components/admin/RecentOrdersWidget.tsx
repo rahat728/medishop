@@ -18,6 +18,7 @@ interface Order {
     };
     totalAmount: number;
     status: OrderStatus;
+    isEmergency?: boolean;
     createdAt: string;
 }
 
@@ -83,9 +84,16 @@ export function RecentOrdersWidget({ orders, loading }: RecentOrdersWidgetProps)
                                 <Package className="w-5 h-5 text-primary-600" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900">
-                                    {order.orderNumber}
-                                </p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-medium text-gray-900">
+                                        {order.orderNumber}
+                                    </p>
+                                    {order.isEmergency && (
+                                        <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                                            🚑
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-xs text-gray-500 truncate">
                                     {order.deliveryAddress?.firstName
                                         ? `${order.deliveryAddress.firstName} ${order.deliveryAddress.lastName}`

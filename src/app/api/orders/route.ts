@@ -127,7 +127,7 @@ export const GET = withAuth(async (request, { user }) => {
             .populate('customer', 'name email phone')
             .populate('deliveryMan', 'name email phone')
             .populate('items.medicine', 'name image')
-            .sort({ [sortBy]: sortOrder === 'asc' ? 1 : -1 })
+            .sort({ isEmergency: -1, [sortBy]: sortOrder === 'asc' ? 1 : -1 })
             .skip((page - 1) * limit)
             .limit(limit)
             .lean();
@@ -250,8 +250,10 @@ export const POST = withAuth(async (request, { user }) => {
             items: orderItems,
             subtotal,
             deliveryFee,
+            isEmergency: validation.data.isEmergency || false,
+            emergencyFee: validation.data.emergencyFee || 0,
             tax,
-            totalAmount,
+            totalAmount: totalAmount + (validation.data.emergencyFee || 0),
             deliveryAddress: shippingAddress,
             paymentMethod,
             paymentStatus: 'pending',

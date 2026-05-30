@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from '@/lib/stripe/client';
 import { CheckoutForm } from './CheckoutForm';
 import { Spinner } from '@/components/ui';
-import { useCartStore } from '@/store';
+import { useCartStore, useCheckoutStore } from '@/store';
 
 interface PaymentWrapperProps {
     shippingAddress: any;
@@ -13,6 +13,7 @@ interface PaymentWrapperProps {
 
 export function PaymentWrapper({ shippingAddress }: PaymentWrapperProps) {
     const { items } = useCartStore();
+    const { isEmergency } = useCheckoutStore();
     const [clientSecret, setClientSecret] = useState('');
     const [amount, setAmount] = useState(0);
     const [orderId, setOrderId] = useState('');
@@ -35,7 +36,9 @@ export function PaymentWrapper({ shippingAddress }: PaymentWrapperProps) {
                     medicine: item._id,
                     quantity: item.quantity
                 })),
-                shippingAddress: shippingAddress
+                shippingAddress: shippingAddress,
+                isEmergency,
+                emergencyFee: isEmergency ? 99 : 0
             })
         })
             .then((res) => res.json())

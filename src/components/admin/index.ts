@@ -32,3 +32,6 @@ export {
 
 // Analytics
 export { AnalyticsDashboard } from './analytics';
+
+// Dashboard Charts Wrapper
+export * from './DashboardCharts';

@@ -12,13 +12,14 @@ import toast from 'react-hot-toast';
 export function OrderReview() {
     const router = useRouter();
     const { items, getSubtotal, clearCart } = useCartStore();
-    const { shippingAddress, paymentMethod, setStep, resetCheckout } = useCheckoutStore();
+    const { shippingAddress, paymentMethod, isEmergency, setStep, resetCheckout } = useCheckoutStore();
     const [isProcessing, setIsProcessing] = useState(false);
 
     const subtotal = getSubtotal();
     const deliveryFee = subtotal > 50 ? 0 : 5.99;
+    const emergencyFee = isEmergency ? 99 : 0;
     const tax = subtotal * 0.08;
-    const total = subtotal + deliveryFee + tax;
+    const total = subtotal + deliveryFee + emergencyFee + tax;
 
     const handlePlaceOrderCOD = async () => {
         setIsProcessing(true);
@@ -43,6 +44,8 @@ export function OrderReview() {
                     },
                     paymentMethod: 'cod',
                     totalAmount: total,
+                    isEmergency,
+                    emergencyFee,
                     notes: '', // Add notes if available in store
                 }),
             });
