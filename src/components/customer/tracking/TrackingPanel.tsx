@@ -27,7 +27,7 @@ export function TrackingPanel({ data }: { data: OrderTrackingData }) {
           </div>
           <div className="flex gap-2">
             {data.isEmergency && (
-              <Badge variant="danger" className="bg-red-500 text-white border-transparent flex gap-1 items-center font-bold px-2 py-1">
+              <Badge variant="error" className="bg-red-500 text-white border-transparent flex gap-1 items-center font-bold px-2 py-1">
                 <span className="text-xs">🚑</span> Emergency (30m)
               </Badge>
             )}
